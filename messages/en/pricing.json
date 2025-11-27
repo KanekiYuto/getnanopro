@@ -1,0 +1,56 @@
+{
+  "title": "Choose Your Plan",
+  "subtitle": "Flexible pricing options to meet the needs of individuals and businesses",
+  "recommended": "Most Popular",
+  "billing": {
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "year": "year",
+    "month": "month",
+    "discount": "Save 20%",
+    "save": "Save ${amount}"
+  },
+  "tiers": [
+    {
+      "name": "Free",
+      "description": "Perfect for personal trial and light usage",
+      "cta": "Get Started",
+      "features": [
+        "20 image generations per month",
+        "Basic AI models",
+        "Standard resolution (512x512)",
+        "Community support",
+        "Save to personal gallery"
+      ]
+    },
+    {
+      "name": "Basic",
+      "description": "For individual users and small projects",
+      "cta": "Subscribe Now",
+      "features": [
+        "200 image generations per month",
+        "Standard AI models",
+        "High resolution (1024x1024)",
+        "Priority generation queue",
+        "Watermark-free export",
+        "Email customer support"
+      ]
+    },
+    {
+      "name": "Pro",
+      "description": "For professional creators and team collaboration",
+      "cta": "Subscribe Now",
+      "features": [
+        "1000 image generations per month",
+        "All advanced AI models",
+        "Ultra-high resolution (2048x2048)",
+        "Highest priority queue",
+        "Batch generation",
+        "API access",
+        "Team collaboration",
+        "Priority customer support",
+        "Commercial use license"
+      ]
+    }
+  ]
+}

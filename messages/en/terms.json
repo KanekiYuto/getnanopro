@@ -1,0 +1,68 @@
+{
+  "title": "Terms of Service",
+  "lastUpdated": "Last Updated",
+  "acceptance": {
+    "title": "Acceptance of Terms",
+    "content1": "Welcome to GetNanoPro (hereinafter referred to as \"the Service\"). Before using the Service, please carefully read and understand this User Service Agreement (hereinafter referred to as \"this Agreement\"). Once you begin using the Service, it indicates that you have fully understood and agreed to accept all terms of this Agreement.",
+    "content2": "If you do not agree with any part of this Agreement, please stop using the Service immediately."
+  },
+  "serviceDescription": {
+    "title": "Service Description",
+    "intro": "GetNanoPro is an AI-powered image generation service platform. We provide users with:",
+    "items": [
+      "AI image generation features",
+      "Image editing and optimization tools",
+      "Project management and storage services",
+      "Other related value-added services"
+    ]
+  },
+  "userAccount": {
+    "title": "User Account",
+    "registration": "Registration requirements: You need to provide truthful, accurate, and complete registration information.",
+    "security": "Account security: You are responsible for all activities under your account. Please keep your account information secure.",
+    "transfer": "Account transfer: You may not transfer your account to others without our written consent."
+  },
+  "usageRules": {
+    "title": "Usage Guidelines",
+    "intro": "When using the Service, you must not:",
+    "items": [
+      "Generate or distribute illegal, harmful, violent, pornographic, or infringing content",
+      "Interfere with or disrupt the normal operation of the Service",
+      "Abuse service resources or engage in commercial resale",
+      "Infringe on others' intellectual property or privacy rights",
+      "Use automated tools to maliciously access the Service"
+    ]
+  },
+  "intellectualProperty": {
+    "title": "Intellectual Property",
+    "platformContent": "Platform content: The intellectual property rights of all content on the Service (including but not limited to software, technology, programs, web pages, text, images, etc.) belong to us.",
+    "userContent": "User-generated content: You own the intellectual property rights to images you generate using the Service, but you must ensure that you do not infringe on third-party rights.",
+    "license": "License grant: You grant us the right to use your generated content to the extent necessary for service improvement and demonstration."
+  },
+  "privacy": {
+    "title": "Privacy Protection",
+    "content": "We value user privacy protection. For information on how we collect, use, and protect your personal information, please refer to our Privacy Policy."
+  },
+  "serviceChanges": {
+    "title": "Service Changes and Termination",
+    "modification": "We reserve the right to modify or discontinue the Service at any time without prior notice.",
+    "termination": "If you violate this Agreement, we have the right to suspend or terminate your account.",
+    "dataRetention": "After service termination, your account data may be deleted."
+  },
+  "disclaimer": {
+    "title": "Disclaimer",
+    "asIs": "The Service is provided \"as is\" without guarantees that it will be uninterrupted or error-free.",
+    "liability": "We are not responsible for any direct or indirect damages arising from the use of the Service.",
+    "responsibility": "You bear full responsibility for content generated using the Service."
+  },
+  "legalJurisdiction": {
+    "title": "Applicable Law and Dispute Resolution",
+    "law": "The interpretation, effectiveness, and resolution of disputes arising from this Agreement shall be governed by the laws of the People's Republic of China.",
+    "disputes": "Disputes arising from this Agreement shall be resolved through friendly negotiation; if negotiation fails, either party may file a lawsuit with the people's court in our jurisdiction."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "intro": "If you have any questions or suggestions regarding this Agreement, please contact us through:",
+    "email": "Email"
+  }
+}
