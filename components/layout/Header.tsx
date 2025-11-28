@@ -4,6 +4,7 @@ import { useState } from 'react';
 import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
 import UserButton from '@/components/auth/UserButton';
+import { siteConfig } from '@/config/site';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -18,7 +19,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-bg-elevated border-b border-border h-[60px] flex-shrink-0">
+      <header className="sticky top-0 z-[100] bg-bg-elevated border-b border-border h-[60px] flex-shrink-0">
         <nav className="h-full px-4 lg:px-8" aria-label="Global">
           <div className="w-full h-full grid grid-cols-3 lg:grid-cols-[1fr_auto_1fr] items-center gap-4">
             {/* 左侧: 侧边栏按钮 */}
@@ -75,7 +76,7 @@ export default function Header() {
                 className="flex items-center hover:opacity-80 transition-opacity duration-200"
               >
                 <p className="text-xl font-bold text-white">
-                  Logo
+                  {siteConfig.name}
                 </p>
               </a>
             </div>
@@ -132,14 +133,14 @@ export default function Header() {
       {/* 移动端菜单打开时的遮罩层 */}
       {mobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 top-[60px] bg-black/40 z-40 animate-in fade-in duration-200"
+          className="lg:hidden fixed inset-0 top-[60px] bg-black/40 z-[90] animate-in fade-in duration-200"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* 移动端菜单面板 - 占满剩余高度 */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-bg-elevated z-50 overflow-y-auto animate-in slide-in-from-top duration-300">
+        <div className="lg:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-bg-elevated z-[95] overflow-y-auto animate-in slide-in-from-top duration-300">
           <div className="px-4 py-4">
             <div className="flex flex-col space-y-1">
               {navigation.map((item) => (

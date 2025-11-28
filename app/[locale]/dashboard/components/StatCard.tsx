@@ -18,7 +18,6 @@ const colorStyles = {
     iconColor: 'text-primary',
     hoverIconColor: 'group-hover:text-white',
     border: 'hover:border-primary/50',
-    shadow: 'hover:shadow-primary/10',
     hoverTextColor: 'group-hover:text-primary',
     badgeBg: 'bg-gray-500/10',
     badgeText: 'text-gray-400',
@@ -31,7 +30,6 @@ const colorStyles = {
     iconColor: 'text-secondary',
     hoverIconColor: 'group-hover:text-white',
     border: 'hover:border-secondary/50',
-    shadow: 'hover:shadow-secondary/10',
     hoverTextColor: 'group-hover:text-secondary',
     badgeBg: 'bg-secondary/10',
     badgeText: 'text-secondary',
@@ -44,7 +42,6 @@ const colorStyles = {
     iconColor: 'text-blue-500',
     hoverIconColor: 'group-hover:text-white',
     border: 'hover:border-blue-500/50',
-    shadow: 'hover:shadow-blue-500/10',
     hoverTextColor: 'group-hover:text-blue-500',
     badgeBg: 'bg-blue-500/10',
     badgeText: 'text-blue-400',
@@ -57,7 +54,6 @@ const colorStyles = {
     iconColor: 'text-purple-500',
     hoverIconColor: 'group-hover:text-white',
     border: 'hover:border-purple-500/50',
-    shadow: 'hover:shadow-purple-500/10',
     hoverTextColor: 'group-hover:text-purple-500',
     badgeBg: 'bg-purple-500/10',
     badgeText: 'text-purple-400',
@@ -68,7 +64,7 @@ export default function StatCard({ icon, value, label, badge, color, expiryInfo 
   const styles = colorStyles[color];
 
   return (
-    <div className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 hover:shadow-lg ${styles.shadow} overflow-hidden cursor-pointer`}>
+    <div className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 overflow-hidden cursor-pointer`}>
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
           <div className={`p-3 rounded-xl ${styles.iconBg} ${styles.hoverIconBg} group-hover:scale-110 transition-all duration-300`}>

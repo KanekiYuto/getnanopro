@@ -1,13 +1,16 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import FuzzyText from '@/components/FuzzyText';
 import Footer from '@/components/layout/Footer';
 
 export default function NotFoundClient() {
+  const t = useTranslations('notFound');
+
   return (
-    <div className="min-h-screen w-screen flex flex-col m-0 p-0 bg-[#121216]">
+    <div className="w-full flex flex-col bg-[#121216]">
       {/* 主内容区域 */}
-      <div className="flex-1 flex flex-col items-center justify-center gap-2">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-8">
         {/* 404 主标题 */}
         <FuzzyText
           fontSize="clamp(10rem, 25vw, 20rem)"
@@ -27,6 +30,22 @@ export default function NotFoundClient() {
         >
           not found
         </FuzzyText>
+
+        {/* 按钮组 */}
+        <div className="flex gap-4 mt-4">
+          <a
+            href="/"
+            className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
+          >
+            {t('buttons.home')}
+          </a>
+          <a
+            href="/dashboard"
+            className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-all cursor-pointer"
+          >
+            {t('buttons.dashboard')}
+          </a>
+        </div>
       </div>
 
       {/* Footer 组件 */}
