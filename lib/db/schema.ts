@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, integer, uuid } from 'drizzle-orm/pg-core';
 
 // Better Auth 用户表
 export const user = pgTable('user', {
@@ -54,4 +54,28 @@ export const verification = pgTable('verification', {
   expiresAt: timestamp('expiresAt').notNull(),
   createdAt: timestamp('createdAt'),
   updatedAt: timestamp('updatedAt'),
+});
+
+// 配额信息表
+export const quota = pgTable('quota', {
+  // UUID 主键,由数据库自动生成
+  id: uuid('id').primaryKey().defaultRandom(),
+  // 用户ID
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // 配额类型: daily_free(免费配额-每日), monthly_basic(月度订阅-基础版), monthly_pro(月度订阅-专业版), quota_pack(配额包)
+  type: text('type').notNull(),
+  // 配额数量 (-1 表示无限, 默认为 0)
+  amount: integer('amount').notNull().default(0),
+  // 已消耗配额数量
+  consumed: integer('consumed').notNull().default(0),
+  // 下发时间
+  issuedAt: timestamp('issued_at').notNull(),
+  // 过期时间 (null 表示永不过期)
+  expiresAt: timestamp('expires_at'),
+  // 创建时间
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  // 更新时间
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
 });
