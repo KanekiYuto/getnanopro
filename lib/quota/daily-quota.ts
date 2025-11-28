@@ -77,7 +77,7 @@ export async function checkAndIssueDailyQuota(
 /**
  * 获取用户当前可用配额总数
  * @param userId 用户ID
- * @returns 可用配额总数 (-1 表示无限)
+ * @returns 可用配额总数
  */
 export async function getAvailableQuota(userId: string): Promise<number> {
   try {
@@ -94,12 +94,6 @@ export async function getAvailableQuota(userId: string): Promise<number> {
           gte(quota.expiresAt, now)
         )
       );
-
-    // 检查是否有无限配额
-    const hasUnlimitedQuota = userQuotas.some((q) => q.amount === -1);
-    if (hasUnlimitedQuota) {
-      return -1;
-    }
 
     // 计算总的可用配额 (总配额 - 已消耗)
     const totalAvailable = userQuotas.reduce((sum, q) => {

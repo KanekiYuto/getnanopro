@@ -48,7 +48,7 @@ export default function DashboardHeader({ userName, userType, isLoggedIn = true 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1 sm:mb-2 truncate">
-              {t('welcome', { name: userName })}
+              {t('welcome', { name: userName || '' })}
             </h1>
             <p className="text-sm sm:text-base text-text-muted">
               {t('subtitle')}

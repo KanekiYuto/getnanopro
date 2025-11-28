@@ -21,19 +21,12 @@ export default function QuotaCard({ userType, quotaInfo }: QuotaCardProps) {
     [USER_TYPE.FREE]: 'FREE',
   };
 
-  const displayValue = quotaInfo
-    ? quotaInfo.available === -1
-      ? '∞'
-      : quotaInfo.available
-    : userType === USER_TYPE.PRO
-      ? '∞'
-      : userType === USER_TYPE.BASIC
-        ? '500'
-        : '10';
+  const displayValue = quotaInfo ? quotaInfo.available : '∞';
 
   const label = userType === USER_TYPE.PRO ? t('quota.unlimited') : t('quota.remaining');
 
-  const expiryInfo = quotaInfo?.expiresAt ? (
+  // 只有 FREE 用户才显示过期时间
+  const expiryInfo = userType === USER_TYPE.FREE && quotaInfo?.expiresAt ? (
     <>
       <span className="text-sm text-text-muted">/</span>
       <span className="text-xs text-text-muted whitespace-nowrap">
@@ -62,6 +55,7 @@ export default function QuotaCard({ userType, quotaInfo }: QuotaCardProps) {
       badge={badgeLabels[userType]}
       color="primary"
       expiryInfo={expiryInfo}
+      href="/quota"
     />
   );
 }

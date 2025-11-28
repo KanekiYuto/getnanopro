@@ -64,9 +64,9 @@ export const quota = pgTable('quota', {
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
-  // 配额类型: daily_free(免费配额-每日), monthly_basic(月度订阅-基础版), monthly_pro(月度订阅-专业版), quota_pack(配额包)
+  // 配额类型: daily_free(免费配额-每日), monthly_basic(月度订阅-基础版), monthly_pro(月度订阅-专业版), yearly_basic(年度订阅-基础版), yearly_pro(年度订阅-专业版), quota_pack(配额包)
   type: text('type').notNull(),
-  // 配额数量 (-1 表示无限, 默认为 0)
+  // 配额数量 (默认为 0)
   amount: integer('amount').notNull().default(0),
   // 已消耗配额数量
   consumed: integer('consumed').notNull().default(0),

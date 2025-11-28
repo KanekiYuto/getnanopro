@@ -1,5 +1,7 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+
 interface StatCardProps {
   icon: React.ReactNode;
   value: string | number;
@@ -7,6 +9,7 @@ interface StatCardProps {
   badge?: string;
   color: 'primary' | 'secondary' | 'blue' | 'purple';
   expiryInfo?: React.ReactNode;
+  href?: string;
 }
 
 const colorStyles = {
@@ -60,11 +63,21 @@ const colorStyles = {
   },
 };
 
-export default function StatCard({ icon, value, label, badge, color, expiryInfo }: StatCardProps) {
+export default function StatCard({ icon, value, label, badge, color, expiryInfo, href }: StatCardProps) {
   const styles = colorStyles[color];
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (href) {
+      router.push(href);
+    }
+  };
 
   return (
-    <div className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 overflow-hidden cursor-pointer`}>
+    <div
+      className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 overflow-hidden ${href ? 'cursor-pointer' : ''}`}
+      onClick={handleClick}
+    >
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
           <div className={`p-3 rounded-xl ${styles.iconBg} ${styles.hoverIconBg} group-hover:scale-110 transition-all duration-300`}>
