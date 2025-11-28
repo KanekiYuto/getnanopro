@@ -2,6 +2,7 @@ import { db } from '@/lib/db';
 import { quota } from '@/lib/db/schema';
 import { eq, and, gte } from 'drizzle-orm';
 import { quotaConfig } from './config';
+import { USER_TYPE, type UserType } from '@/config/constants';
 
 /**
  * 检查并下发每日免费配额
@@ -11,10 +12,10 @@ import { quotaConfig } from './config';
  */
 export async function checkAndIssueDailyQuota(
   userId: string,
-  userType: 'free' | 'basic' | 'pro'
+  userType: UserType
 ): Promise<boolean> {
   // 只为免费用户下发每日配额
-  if (userType !== 'free') {
+  if (userType !== USER_TYPE.FREE) {
     return false;
   }
 

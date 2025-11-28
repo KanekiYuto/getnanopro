@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useSession } from '@/lib/auth-client';
 import useUserStore from '@/store/useUserStore';
+import { USER_TYPE } from '@/config/constants';
 
 export default function UserProvider({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = useSession();
@@ -16,7 +17,7 @@ export default function UserProvider({ children }: { children: React.ReactNode }
 
     if (session?.user) {
       const userId = session.user.id;
-      const userType = (session.user as any).userType || 'free';
+      const userType = (session.user as any).userType || USER_TYPE.FREE;
 
       // 将 session 数据转换为 User 类型并存储到 store
       setUser({
@@ -31,7 +32,7 @@ export default function UserProvider({ children }: { children: React.ReactNode }
       });
 
       // 检查并下发每日免费配额(异步执行,不阻塞UI)
-      if (userType === 'free') {
+      if (userType === USER_TYPE.FREE) {
         fetch('/api/quota/daily-check', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -67,7 +68,7 @@ export default function UserProvider({ children }: { children: React.ReactNode }
             }
           })
           .catch((err) => {
-            console.error('获取配额信息失败:', err);
+            console.error('Failed to fetch quota info:', err);
             setQuotaLoading(false);
           });
       }

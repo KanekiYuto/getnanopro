@@ -16,14 +16,14 @@ export default function SignInButton({ className, children }: SignInButtonProps)
         callbackURL: '/', // 登录成功后跳转到仪表板
       });
     } catch (error) {
-      console.error('登录失败:', error);
+      console.error('Login failed:', error);
     }
   };
 
   return (
     <button
       onClick={handleGoogleSignIn}
-      className={className || 'flex items-center justify-center gap-3 px-6 py-3 rounded-xl bg-white hover:bg-gray-50 text-gray-900 font-semibold transition-all border border-gray-200 hover:border-gray-300'}
+      className={className || 'flex items-center justify-center gap-3 px-6 py-3 rounded-xl bg-white hover:bg-gray-50 text-gray-900 font-semibold transition-all border border-gray-200 hover:border-gray-300 cursor-pointer'}
     >
       {/* Google Logo SVG */}
       <svg className="w-5 h-5" viewBox="0 0 24 24">

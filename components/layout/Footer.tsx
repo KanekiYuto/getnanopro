@@ -21,14 +21,14 @@ export default function Footer() {
               {siteConfig.name}
             </a>
             <p className="text-text-muted text-sm leading-relaxed max-w-md">
-              {siteConfig.description}
+              {t('seo.description')}
             </p>
           </div>
 
           {/* 动态链接区域 - 三列菜单，响应式布局 */}
           {footerSections.map((section) => (
             <div key={section.title} className="min-w-0">
-              <h3 className="text-text font-semibold mb-4 text-base">{section.title}</h3>
+              <div className="text-text font-semibold mb-4 text-base">{section.title}</div>
               <ul className="space-y-3">
                 {section.links.map((link) => (
                   <li key={link.name}>

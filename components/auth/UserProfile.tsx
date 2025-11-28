@@ -31,7 +31,7 @@ export default function UserProfile() {
         },
       });
     } catch (error) {
-      console.error('退出登录失败:', error);
+      console.error('Sign out failed:', error);
     }
   };
 
@@ -54,7 +54,7 @@ export default function UserProfile() {
       {/* 退出登录按钮 */}
       <button
         onClick={handleSignOut}
-        className="px-3 py-1.5 text-sm rounded-lg border border-border hover:border-primary/50 hover:bg-bg-hover text-text-muted hover:text-text transition-all"
+        className="px-3 py-1.5 text-sm rounded-lg border border-border hover:border-primary/50 hover:bg-bg-hover text-text-muted hover:text-text transition-all cursor-pointer"
       >
         退出
       </button>

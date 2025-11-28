@@ -44,7 +44,7 @@ export default function Pricing() {
           <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-bg-elevated/80 backdrop-blur-sm border border-border">
             <button
               onClick={() => setIsYearly(false)}
-              className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 ${
+              className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 cursor-pointer ${
                 !isYearly
                   ? 'bg-gradient-to-r from-primary to-primary-hover text-white scale-105'
                   : 'text-text-muted hover:text-text hover:bg-bg-hover/50'
@@ -54,7 +54,7 @@ export default function Pricing() {
             </button>
             <button
               onClick={() => setIsYearly(true)}
-              className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 relative ${
+              className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 relative cursor-pointer ${
                 isYearly
                   ? 'bg-gradient-to-r from-primary to-primary-hover text-white scale-105'
                   : 'text-text-muted hover:text-text hover:bg-bg-hover/50'
@@ -131,7 +131,7 @@ export default function Pricing() {
 
                   {/* CTA 按钮 */}
                   <button
-                    className={`group/btn w-full h-11 sm:h-12 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 mb-6 sm:mb-8 relative overflow-hidden ${
+                    className={`group/btn w-full h-11 sm:h-12 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 mb-6 sm:mb-8 relative overflow-hidden cursor-pointer ${
                       tier.highlighted
                         ? 'bg-gradient-to-r from-primary via-primary to-primary-hover text-white hover:scale-[1.02] active:scale-95'
                         : 'border-2 border-border hover:border-primary/50 text-text hover:text-white hover:bg-gradient-to-r hover:from-primary/80 hover:to-primary active:scale-95'

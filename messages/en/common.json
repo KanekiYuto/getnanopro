@@ -1,3 +1,9 @@
 {
-  "language": "Language"
+  "language": "Language",
+  "loading": "Loading...",
+  "seo": {
+    "title": "{siteName} - AI Image Generation Tool",
+    "description": "Create high-quality professional images in seconds with AI-powered image generation. Simple, fast, and powerful artificial intelligence tools.",
+    "keywords": "AI image generation, AI art, image creator, AI tools, professional images"
+  }
 }

@@ -54,7 +54,7 @@ export default function UserButton() {
       <>
         <button
           onClick={() => setShowLoginModal(true)}
-          className="px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-primary-hover rounded-lg transition-all duration-200 hover:scale-105"
+          className="px-4 py-2 text-sm font-semibold text-white bg-primary hover:bg-primary-hover rounded-lg transition-all duration-200 hover:scale-105 cursor-pointer"
         >
           登录
         </button>
@@ -71,7 +71,7 @@ export default function UserButton() {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setShowDropdown(!showDropdown)}
-        className="flex items-center gap-2 p-1 rounded-full hover:bg-bg-hover transition-colors duration-200"
+        className="flex items-center gap-2 p-1 rounded-full hover:bg-bg-hover transition-colors duration-200 cursor-pointer"
       >
         {session.user.image ? (
           <img
@@ -169,7 +169,7 @@ export default function UserButton() {
           <div className="border-t border-border py-2">
             <button
               onClick={handleSignOut}
-              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-bg-hover hover:text-red-300 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-bg-hover hover:text-red-300 transition-colors cursor-pointer"
             >
               <svg
                 className="w-4 h-4"

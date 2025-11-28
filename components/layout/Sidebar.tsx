@@ -16,6 +16,7 @@ function Icon({ name, className }: { name: string; className?: string }) {
   const icons: Record<string, string> = {
     home: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
     dashboard: 'M4 5a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM14 5a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 16a1 1 0 011-1h4a1 1 0 011 1v3a1 1 0 01-1 1H5a1 1 0 01-1-1v-3zM14 13a1 1 0 011-1h4a1 1 0 011 1v7a1 1 0 01-1 1h-4a1 1 0 01-1-1v-7z',
+    pricing: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z',
     chart: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
     folder: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z',
     document: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
@@ -53,7 +54,7 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
         },
       });
     } catch (error) {
-      console.error('退出登录失败:', error);
+      console.error('Sign out failed:', error);
     }
   };
 
@@ -64,7 +65,7 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
         callbackURL: '/dashboard',
       });
     } catch (error) {
-      console.error('登录失败:', error);
+      console.error('Login failed:', error);
     }
   };
 
@@ -92,7 +93,7 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
       <button
         onClick={handleSignIn}
         className={classNames(
-          'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+          'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all cursor-pointer',
           'bg-primary hover:bg-primary-hover text-white',
           isCollapsed ? 'justify-center' : ''
         )}
@@ -111,7 +112,7 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
       <button
         onClick={() => setShowMenu(!showMenu)}
         className={classNames(
-          'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors',
+          'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors cursor-pointer',
           isCollapsed ? 'justify-center' : ''
         )}
       >
@@ -156,7 +157,7 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
         <div className="absolute bottom-full left-0 right-0 mb-2 bg-bg-elevated border border-border rounded-lg shadow-xl overflow-hidden">
           <button
             onClick={handleSignOut}
-            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors"
+            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors cursor-pointer"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -268,9 +269,9 @@ export default function Sidebar() {
               <div className="space-y-6">
                 {navigationGroups.map((group) => (
                   <div key={group.title}>
-                    <h3 className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
+                    <div className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
                       {group.title}
-                    </h3>
+                    </div>
                     <ul className="space-y-0.5">
                       {group.items.map((item) => {
                         const isActive = pathname === item.href;
@@ -325,9 +326,9 @@ export default function Sidebar() {
             {navigationGroups.map((group, index) => (
               <div key={group.title}>
                 {!isCollapsed && (
-                  <h3 className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
+                  <div className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
                     {group.title}
-                  </h3>
+                  </div>
                 )}
                 {isCollapsed && index > 0 && (
                   <div className="h-px bg-white/10 mx-3 my-2" />

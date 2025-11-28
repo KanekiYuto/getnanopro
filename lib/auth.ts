@@ -15,6 +15,17 @@ export const auth = betterAuth({
     schema,
   }),
 
+  // 用户配置 - 添加自定义字段
+  user: {
+    additionalFields: {
+      userType: {
+        type: 'string',
+        defaultValue: 'free',
+        input: false, // 不允许用户直接输入
+      },
+    },
+  },
+
   // 邮箱密码登录配置
   emailAndPassword: {
     enabled: true,

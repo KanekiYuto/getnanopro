@@ -36,7 +36,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         callbackURL: '/',
       });
     } catch (error) {
-      console.error('登录失败:', error);
+      console.error('Login failed:', error);
       setIsLoading(false);
     }
   };

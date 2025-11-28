@@ -26,7 +26,7 @@ export default function Header() {
               {/* Sidebar 收缩按钮 - 仅在桌面端显示 */}
               <button
                 type="button"
-                className="hidden lg:inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200"
+                className="hidden lg:inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
                 onClick={toggleCollapsed}
                 title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
               >
@@ -51,7 +51,7 @@ export default function Header() {
               {/* Sidebar 切换按钮 - 仅在移动端显示 */}
               <button
                 type="button"
-                className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200"
+                className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
                 onClick={toggleSidebar}
               >
                 <svg
@@ -101,7 +101,7 @@ export default function Header() {
               {/* 移动端菜单按钮 */}
               <button
                 type="button"
-                className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200"
+                className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 <span className="sr-only">Open main menu</span>

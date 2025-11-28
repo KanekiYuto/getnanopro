@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import type { UserType } from '@/config/constants';
 
 interface User {
   id: string;
@@ -6,7 +7,7 @@ interface User {
   email: string;
   emailVerified: boolean;
   image?: string;
-  userType: 'free' | 'basic' | 'pro';
+  userType: UserType;
   createdAt: Date;
   updatedAt: Date;
 }
