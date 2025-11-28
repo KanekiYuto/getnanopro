@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
+import UserButton from '@/components/auth/UserButton';
 
 const navigation = [
   { name: 'Home', href: '/' },
@@ -92,8 +93,11 @@ export default function Header() {
               ))}
             </div>
 
-            {/* 右侧: 移动端菜单按钮 */}
+            {/* 右侧: 用户按钮和移动端菜单按钮 */}
             <div className="flex justify-end items-center gap-2">
+              {/* 用户按钮 */}
+              <UserButton />
+
               {/* 移动端菜单按钮 */}
               <button
                 type="button"

@@ -4,6 +4,8 @@ import { usePathname } from '@/i18n/routing';
 import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
 import { siteConfig, navigationGroups, type NavItem } from '@/config/site';
+import { useSession, signOut, signIn } from '@/lib/auth-client';
+import { useState } from 'react';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -33,6 +35,137 @@ function Icon({ name, className }: { name: string; className?: string }) {
     >
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icons[name] || icons.home} />
     </svg>
+  );
+}
+
+// 用户区域组件
+function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
+  const { data: session, isPending } = useSession();
+  const [showMenu, setShowMenu] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = '/';
+          },
+        },
+      });
+    } catch (error) {
+      console.error('退出登录失败:', error);
+    }
+  };
+
+  const handleSignIn = async () => {
+    try {
+      await signIn.social({
+        provider: 'google',
+        callbackURL: '/dashboard',
+      });
+    } catch (error) {
+      console.error('登录失败:', error);
+    }
+  };
+
+  // 加载中状态
+  if (isPending) {
+    return (
+      <div className={classNames(
+        'flex items-center gap-3 rounded-md px-3 py-2.5 animate-pulse',
+        isCollapsed ? 'justify-center' : ''
+      )}>
+        <div className="w-8 h-8 rounded-full bg-border shrink-0" />
+        {!isCollapsed && (
+          <div className="flex-1">
+            <div className="w-20 h-4 bg-border rounded mb-1" />
+            <div className="w-32 h-3 bg-border rounded" />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // 未登录状态
+  if (!session) {
+    return (
+      <button
+        onClick={handleSignIn}
+        className={classNames(
+          'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
+          'bg-primary hover:bg-primary-hover text-white',
+          isCollapsed ? 'justify-center' : ''
+        )}
+      >
+        <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+        </svg>
+        {!isCollapsed && <span>登录</span>}
+      </button>
+    );
+  }
+
+  // 已登录状态
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setShowMenu(!showMenu)}
+        className={classNames(
+          'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors',
+          isCollapsed ? 'justify-center' : ''
+        )}
+      >
+        {session.user.image ? (
+          <img
+            src={session.user.image}
+            alt={session.user.name || '用户'}
+            className="w-8 h-8 rounded-full border-2 border-primary shrink-0"
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shrink-0">
+            {(session.user.name || session.user.email || 'U')[0].toUpperCase()}
+          </div>
+        )}
+        {!isCollapsed && (
+          <div className="flex-1 text-left min-w-0">
+            <div className="font-medium text-white text-sm truncate">
+              {session.user.name || '用户'}
+            </div>
+            <div className="text-xs text-text-muted truncate">
+              {session.user.email}
+            </div>
+          </div>
+        )}
+        {!isCollapsed && (
+          <svg
+            className={classNames(
+              'w-4 h-4 transition-transform',
+              showMenu ? 'rotate-180' : ''
+            )}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
+      </button>
+
+      {/* 下拉菜单 */}
+      {showMenu && !isCollapsed && (
+        <div className="absolute bottom-full left-0 right-0 mb-2 bg-bg-elevated border border-border rounded-lg shadow-xl overflow-hidden">
+          <button
+            onClick={handleSignOut}
+            className="flex w-full items-center gap-3 px-4 py-3 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span>退出登录</span>
+          </button>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -159,15 +292,7 @@ export default function Sidebar() {
 
             {/* 底部用户区域 */}
             <div className="border-t border-border/50 p-3">
-              <button className="flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm">
-                  U
-                </div>
-                <div className="flex-1 text-left">
-                  <div className="font-medium text-white text-sm">User Name</div>
-                  <div className="text-xs text-text-muted">user@example.com</div>
-                </div>
-              </button>
+              <UserSection />
             </div>
           </div>
         </div>
@@ -228,20 +353,7 @@ export default function Sidebar() {
 
         {/* 底部用户区域 */}
         <div className="border-t border-border/50 p-3">
-          <button className={classNames(
-            'flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors',
-            isCollapsed ? 'justify-center' : ''
-          )}>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-semibold text-sm shrink-0">
-              U
-            </div>
-            {!isCollapsed && (
-              <div className="flex-1 text-left min-w-0">
-                <div className="font-medium text-white text-sm truncate">User Name</div>
-                <div className="text-xs text-text-muted truncate">user@example.com</div>
-              </div>
-            )}
-          </button>
+          <UserSection isCollapsed={isCollapsed} />
         </div>
       </div>
     </>

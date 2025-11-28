@@ -6,14 +6,24 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "db:generate": "drizzle-kit generate",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.86.0",
+    "@types/pg": "^8.15.6",
     "better-auth": "^1.4.3",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
+    "https-proxy-agent": "^7.0.6",
     "next": "16.0.5",
     "next-intl": "^4.5.5",
+    "pg": "^8.16.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
+    "undici": "^7.16.0",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
@@ -21,9 +31,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.7",
     "eslint": "^9",
     "eslint-config-next": "16.0.5",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

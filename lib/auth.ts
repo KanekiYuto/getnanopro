@@ -1,19 +1,24 @@
 import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
+import { drizzleAdapter } from 'better-auth/adapters/drizzle';
+import { db } from './db';
+import * as schema from './db/schema';
+
+// 导入 fetch 配置以解决 Google OAuth 超时问题
+import './fetch-config';
 
 // Better Auth 服务端配置
 export const auth = betterAuth({
-  // 数据库配置
-  database: {
-    // 使用环境变量配置数据库连接
-    provider: 'sqlite', // 或者 'postgresql', 'mysql'
-    url: process.env.DATABASE_URL || 'file:./db.sqlite',
-  },
+  // 数据库配置 - 使用 Drizzle ORM
+  database: drizzleAdapter(db, {
+    provider: 'pg',
+    schema,
+  }),
 
   // 邮箱密码登录配置
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false, // 可选：是否需要邮箱验证
+    requireEmailVerification: false, // 可选:是否需要邮箱验证
   },
 
   // 社交登录配置
