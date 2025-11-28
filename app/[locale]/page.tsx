@@ -1,22 +1,10 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
 import { siteConfig } from '@/config/site';
 import Divider from '@/components/Divider';
 import Pricing from '@/components/Pricing';
-import { getTranslations } from 'next-intl/server';
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: 'home' });
-
-  return {
-    title: t('metadata.title', { siteName: siteConfig.name }),
-    description: t('metadata.description'),
-  };
-}
+import PrismaticBurst from '@/components/PrismaticBurst';
 
 export default function Home() {
   const t = useTranslations('home');
@@ -52,10 +40,18 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Hero 区域 */}
       <section className="relative overflow-hidden">
-        {/* 背景装饰 */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl" />
+        {/* Prismatic Burst 背景 */}
+        <div className="absolute inset-0">
+          <PrismaticBurst
+            intensity={1.5}
+            speed={0.3}
+            animationType="rotate3d"
+            colors={['#6633FF', '#8866ff', '#aa99ff', '#7d4dff']}
+            distort={3}
+            rayCount={12}
+            mixBlendMode="lighten"
+          />
+        </div>
 
         <div className="relative container mx-auto px-4 py-24 md:py-32">
           <div className="max-w-4xl mx-auto text-center">
@@ -87,24 +83,15 @@ export default function Home() {
             {/* CTA 按钮 */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <a
-                className="group relative flex h-14 items-center justify-center gap-2 rounded-xl bg-primary hover:bg-primary-hover px-8 text-white font-semibold transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-105"
+                className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
                 href="/dashboard"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
                 <span>{t('hero.buttons.startCreate')}</span>
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
               </a>
               <a
-                className="flex h-14 items-center justify-center gap-2 rounded-xl border-2 border-border-light hover:border-primary/50 hover:bg-bg-elevated px-8 text-text font-semibold transition-all hover:scale-105"
+                className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium transition-all cursor-pointer"
                 href="/projects"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-                </svg>
                 <span>{t('hero.buttons.viewExamples')}</span>
               </a>
             </div>
@@ -219,24 +206,14 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <a
                   href="/dashboard"
-                  className="group flex items-center justify-center gap-2 h-14 px-8 rounded-xl bg-primary hover:bg-primary-hover text-white font-semibold transition-all shadow-lg shadow-primary/30 hover:shadow-xl hover:shadow-primary/40 hover:scale-105"
+                  className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
                   <span>{t('cta.buttons.freeTrial')}</span>
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
                 </a>
                 <a
                   href="/projects"
-                  className="flex items-center justify-center gap-2 h-14 px-8 rounded-xl border-2 border-border-light hover:border-primary/50 hover:bg-bg-hover text-text font-semibold transition-all hover:scale-105"
+                  className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium transition-all cursor-pointer"
                 >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                  </svg>
                   <span>{t('cta.buttons.viewExamples')}</span>
                 </a>
               </div>

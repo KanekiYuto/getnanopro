@@ -186,7 +186,7 @@ function MenuItem({ item, isActive, onClick, isCollapsed }: {
         isCollapsed ? 'justify-center' : '',
         isActive
           ? 'bg-primary/15 text-white border border-primary/40 shadow-lg shadow-primary/10'
-          : 'text-text-muted hover:text-white hover:bg-white/8 border border-transparent hover:border-white/10'
+          : 'text-text-muted hover:text-white hover:bg-white/8'
       )}
       title={isCollapsed ? item.name : ''}
     >

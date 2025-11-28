@@ -69,9 +69,6 @@ export default function StatCard({ icon, value, label, badge, color, expiryInfo 
 
   return (
     <div className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 hover:shadow-lg ${styles.shadow} overflow-hidden cursor-pointer`}>
-      {/* 背景装饰 */}
-      <div className={`absolute top-0 right-0 w-32 h-32 ${styles.bg} rounded-full blur-3xl ${styles.hoverBg} transition-all`} />
-
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
           <div className={`p-3 rounded-xl ${styles.iconBg} ${styles.hoverIconBg} group-hover:scale-110 transition-all duration-300`}>
