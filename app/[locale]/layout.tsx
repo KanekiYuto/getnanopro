@@ -9,11 +9,15 @@ import ModalProvider from '@/components/providers/ModalProvider';
 import NavigationProgress from '@/components/providers/NavigationProgress';
 import { siteConfig } from '@/config/site';
 import { locales, defaultLocale } from '@/i18n/config';
+import { getServerSession } from '@/lib/auth-helpers';
 import "../globals.css";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common' });
+
+  // 当前页面的 canonical URL
+  const canonicalPath = locale === defaultLocale ? '/' : `/${locale}`;
 
   // 动态生成语言路径
   const languages = {
@@ -35,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     robots: siteConfig.robots,
     metadataBase: siteConfig.url ? new URL(siteConfig.url) : undefined,
     alternates: {
-      canonical: '/',
+      canonical: canonicalPath,
       languages,
     },
   };
@@ -57,13 +61,17 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  const messages = await getMessages();
+  // 并行获取消息和 session,避免阻塞
+  const [messages, initialSession] = await Promise.all([
+    getMessages(),
+    getServerSession(),
+  ]);
 
   return (
     <html lang={locale}>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
-          <UserProvider>
+          <UserProvider initialSession={initialSession}>
             <NavigationProgress />
             <PageLayout>{children}</PageLayout>
             <ModalProvider />

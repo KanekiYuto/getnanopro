@@ -1,16 +1,24 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { usePathname } from '@/i18n/routing';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import Loading from '@/components/common/Loading';
-import useLoadingStore from '@/store/useLoadingStore';
 
 // 不显示全局布局的路由路径
 const HIDDEN_LAYOUT_PATHS: string[] = [
   // 在这里添加不需要显示布局的路径
   // '/admin',
+];
+
+// 需要显示 loading 的路由路径(白名单)
+const LOADING_ENABLED_PATHS: string[] = [
+  '/dashboard',
+  '/settings',
+  '/quota',
+  '/ai-generator',
 ];
 
 interface PageLayoutProps {
@@ -20,15 +28,48 @@ interface PageLayoutProps {
 /**
  * 全局页面布局组件
  * 包含 Sidebar 和 Header
+ *
+ * Loading 策略:
+ * - 白名单模式,只在指定路径显示 loading
+ * - 通过监听 children 渲染状态自动控制
+ * - 确保 loading 至少显示 500ms,避免闪烁
  */
 export default function PageLayout({ children }: PageLayoutProps) {
   const pathname = usePathname();
-  const { isLoading, loadingText } = useLoadingStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const [startTime, setStartTime] = useState<number>(0);
 
   // 检查当前路径是否应该隐藏全局布局
   const shouldHideLayout = HIDDEN_LAYOUT_PATHS.some((path) =>
     pathname.startsWith(path)
   );
+
+  // 检查当前路径是否启用 loading
+  const isLoadingEnabled = LOADING_ENABLED_PATHS.some((path) =>
+    pathname.startsWith(path)
+  );
+
+  // 路由变化时显示 loading,并记录开始时间
+  useEffect(() => {
+    if (isLoadingEnabled) {
+      setIsLoading(true);
+      setStartTime(Date.now());
+    }
+  }, [pathname, isLoadingEnabled]);
+
+  // 监听 children 变化,确保 loading 至少显示 500ms
+  useEffect(() => {
+    if (isLoading && isLoadingEnabled) {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, 500 - elapsed);
+
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+      }, remaining);
+
+      return () => clearTimeout(timer);
+    }
+  }, [children, isLoading, isLoadingEnabled, startTime]);
 
   if (shouldHideLayout) {
     return <>{children}</>;
@@ -46,10 +87,10 @@ export default function PageLayout({ children }: PageLayoutProps) {
 
         {/* Main 内容区域 - 可滚动 */}
         <main className="relative flex-1 bg-bg text-text overflow-y-auto scrollbar-dark">
-          {/* 全局 Loading 遮罩层 - 只遮罩 main 区域，最先渲染 */}
-          {isLoading && (
+          {/* 全局 Loading 遮罩层 - 只在白名单页面显示 */}
+          {isLoadingEnabled && isLoading && (
             <div className="fixed inset-0 lg:left-64 top-[60px] bg-bg/90 backdrop-blur-md z-[200] flex items-center justify-center">
-              <Loading text={loadingText} fullScreen={false} />
+              <Loading text="加载中..." fullScreen={false} />
             </div>
           )}
 

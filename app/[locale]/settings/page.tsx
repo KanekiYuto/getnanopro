@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
-import { useLoading } from '@/hooks/useLoading';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -10,16 +9,8 @@ import { Copy, TrendingUp } from 'lucide-react';
 import LoginRequired from '@/components/common/LoginRequired';
 
 export default function SettingsPage() {
-  const { user, isLoading } = useUserStore();
+  const { user } = useUserStore();
   const t = useTranslations('settings');
-
-  // 自动管理页面加载状态
-  useLoading();
-
-  // 加载中时返回 null，由全局 Loading 显示
-  if (isLoading) {
-    return null;
-  }
 
   // 未登录状态
   if (!user) {

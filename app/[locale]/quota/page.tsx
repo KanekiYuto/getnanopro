@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import { useLoading } from '@/hooks/useLoading';
 import useUserStore from '@/store/useUserStore';
 import LoginRequired from '@/components/common/LoginRequired';
 import QuotaSummaryCard from './components/QuotaSummaryCard';
@@ -22,7 +21,7 @@ interface QuotaItem {
 
 export default function QuotaPage() {
   const t = useTranslations('quota');
-  const { user, isLoading } = useUserStore();
+  const { user } = useUserStore();
   const [totalAvailable, setTotalAvailable] = useState<number | null>(null);
   const [activeQuotas, setActiveQuotas] = useState<QuotaItem[] | null>(null);
   const [expiredQuotas, setExpiredQuotas] = useState<QuotaItem[] | null>(null);
@@ -30,9 +29,6 @@ export default function QuotaPage() {
   const activeTabRef = useRef<HTMLButtonElement>(null);
   const expiredTabRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-
-  // 自动管理页面加载状态
-  useLoading();
 
   // 获取总配额（仅在已登录时）
   useEffect(() => {
@@ -107,11 +103,6 @@ export default function QuotaPage() {
       setExpiredQuotas([]);
     }
   };
-
-  // 加载中时返回 null，由全局 Loading 显示
-  if (isLoading) {
-    return null;
-  }
 
   // 未登录状态
   if (!user) {

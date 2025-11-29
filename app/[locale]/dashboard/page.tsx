@@ -2,7 +2,6 @@
 
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
-import { useLoading } from '@/hooks/useLoading';
 import LoginRequired from '@/components/common/LoginRequired';
 import DashboardHeader from './components/DashboardHeader';
 import QuotaCard from './components/QuotaCard';
@@ -14,14 +13,6 @@ export default function DashboardPage() {
   const { user, isLoading, quotaInfo } = useUserStore();
   const t = useTranslations('dashboard.stats');
   const tCommon = useTranslations('dashboard');
-
-  // 自动管理页面加载状态
-  useLoading();
-
-  // 加载中时返回 null，由全局 Loading 显示
-  if (isLoading) {
-    return null;
-  }
 
   // 未登录状态 - 显示 DashboardHeader 和登录提示
   if (!user) {
