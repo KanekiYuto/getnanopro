@@ -113,6 +113,35 @@ body {
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* 全局渐变色工具类 */
+/* 渐变边框 - 灰色 */
+.gradient-border {
+  border: 2px solid transparent;
+  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, rgba(39, 39, 42, 0.5), rgba(39, 39, 42, 0.5));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* 渐变边框 - 彩色 */
+.gradient-border-colorful {
+  border: 2px solid transparent;
+  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* 渐变背景 - 彩色 */
+.gradient-bg {
+  background: linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+}
+
+/* 渐变文字 - 彩色 */
+.gradient-text {
+  background: linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
 
 * {
   border-color: var(--color-border);
