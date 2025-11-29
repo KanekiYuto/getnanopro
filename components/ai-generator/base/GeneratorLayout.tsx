@@ -41,7 +41,7 @@ export default function GeneratorLayout({
           </div>
 
           {/* 生成按钮区域 - 粘性定位在底部 */}
-          <div className="sticky bottom-4 rounded-xl p-4 gradient-border">
+          <div className="sticky bottom-2 rounded-xl p-4 gradient-border">
             {generateButton}
           </div>
         </div>

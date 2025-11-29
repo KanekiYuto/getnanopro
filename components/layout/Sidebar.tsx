@@ -3,7 +3,8 @@
 import { usePathname } from '@/i18n/routing';
 import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
-import { siteConfig, navigationGroups, type NavItem } from '@/config/site';
+import { siteConfig } from '@/config/site';
+import { navigationGroups, type NavItem } from '@/config/navigation';
 import { useSession, signOut, signIn } from '@/lib/auth-client';
 import { useState } from 'react';
 
@@ -171,11 +172,12 @@ function UserSection({ isCollapsed }: { isCollapsed?: boolean }) {
 }
 
 // 菜单项组件
-function MenuItem({ item, isActive, onClick, isCollapsed }: {
+function MenuItem({ item, isActive, onClick, isCollapsed, t }: {
   item: NavItem;
   isActive: boolean;
   onClick?: () => void;
   isCollapsed?: boolean;
+  t: (key: string) => string;
 }) {
   return (
     <a
@@ -188,7 +190,7 @@ function MenuItem({ item, isActive, onClick, isCollapsed }: {
           ? 'bg-primary/15 text-white border border-primary/40 shadow-lg shadow-primary/10'
           : 'text-text-muted hover:text-white hover:bg-white/8'
       )}
-      title={isCollapsed ? item.name : ''}
+      title={isCollapsed ? t(`navigation.${item.name}`) : ''}
     >
       {/* 激活状态背景渐变 */}
       {isActive && (
@@ -222,7 +224,7 @@ function MenuItem({ item, isActive, onClick, isCollapsed }: {
           'flex-1 truncate transition-all duration-200 z-10 relative',
           isActive ? 'font-semibold' : ''
         )}>
-          {item.name}
+          {t(`navigation.${item.name}`)}
         </span>
       )}
     </a>
@@ -270,7 +272,7 @@ export default function Sidebar() {
                 {navigationGroups.map((group) => (
                   <div key={group.title}>
                     <div className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
-                      {group.title}
+                      {t(`navigation.${group.title}`)}
                     </div>
                     <ul className="space-y-0.5">
                       {group.items.map((item) => {
@@ -281,6 +283,7 @@ export default function Sidebar() {
                               item={item}
                               isActive={isActive}
                               onClick={closeSidebar}
+                              t={t}
                             />
                           </li>
                         );
@@ -327,7 +330,7 @@ export default function Sidebar() {
               <div key={group.title}>
                 {!isCollapsed && (
                   <div className="px-3 mb-3 text-[11px] font-semibold text-text-dim/60 uppercase tracking-widest">
-                    {group.title}
+                    {t(`navigation.${group.title}`)}
                   </div>
                 )}
                 {isCollapsed && index > 0 && (
@@ -342,6 +345,7 @@ export default function Sidebar() {
                           item={item}
                           isActive={isActive}
                           isCollapsed={isCollapsed}
+                          t={t}
                         />
                       </li>
                     );

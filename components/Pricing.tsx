@@ -41,12 +41,12 @@ export default function Pricing() {
           </p>
 
           {/* 订阅周期切换 */}
-          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-bg-elevated/80 backdrop-blur-sm border border-border">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-bg-elevated/80 backdrop-blur-sm gradient-border">
             <button
               onClick={() => setIsYearly(false)}
               className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 cursor-pointer ${
                 !isYearly
-                  ? 'bg-gradient-to-r from-primary to-primary-hover text-white scale-105'
+                  ? 'gradient-bg text-white scale-105'
                   : 'text-text-muted hover:text-text hover:bg-bg-hover/50'
               }`}
             >
@@ -56,7 +56,7 @@ export default function Pricing() {
               onClick={() => setIsYearly(true)}
               className={`px-4 sm:px-6 md:px-8 py-2 sm:py-2.5 md:py-3 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 relative cursor-pointer ${
                 isYearly
-                  ? 'bg-gradient-to-r from-primary to-primary-hover text-white scale-105'
+                  ? 'gradient-bg text-white scale-105'
                   : 'text-text-muted hover:text-text hover:bg-bg-hover/50'
               }`}
             >
@@ -83,15 +83,15 @@ export default function Pricing() {
             return (
               <div
                 key={tier.id}
-                className={`group relative rounded-2xl sm:rounded-3xl border-2 transition-all duration-500 hover:translate-y-[-4px] sm:hover:translate-y-[-8px] ${
+                className={`group relative rounded-2xl sm:rounded-3xl transition-all duration-500 hover:translate-y-[-4px] sm:hover:translate-y-[-8px] ${
                   tier.highlighted
-                    ? 'border-primary/50 bg-gradient-to-br from-primary/10 via-bg-elevated to-bg-elevated md:scale-105 z-10'
-                    : 'border-border/50 bg-gradient-to-br from-bg-elevated to-bg-card hover:border-primary/30'
+                    ? 'gradient-border-colorful bg-gradient-to-br from-primary/10 via-bg-elevated to-bg-elevated md:scale-105 z-10'
+                    : 'gradient-border bg-gradient-to-br from-bg-elevated to-bg-card'
                 }`}
               >
                 {/* 推荐标签 */}
                 {tier.highlighted && (
-                  <div className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 px-4 sm:px-6 py-1.5 sm:py-2 bg-gradient-to-r from-primary via-primary to-primary-hover text-white text-xs sm:text-sm font-bold rounded-full whitespace-nowrap">
+                  <div className="absolute -top-4 sm:-top-5 left-1/2 -translate-x-1/2 px-4 sm:px-6 py-1.5 sm:py-2 gradient-bg text-white text-xs sm:text-sm font-bold rounded-full whitespace-nowrap">
                     ✨ {t('recommended')}
                   </div>
                 )}
@@ -133,8 +133,8 @@ export default function Pricing() {
                   <button
                     className={`group/btn w-full h-11 sm:h-12 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 mb-6 sm:mb-8 relative overflow-hidden cursor-pointer ${
                       tier.highlighted
-                        ? 'bg-gradient-to-r from-primary via-primary to-primary-hover text-white hover:scale-[1.02] active:scale-95'
-                        : 'border-2 border-border hover:border-primary/50 text-text hover:text-white hover:bg-gradient-to-r hover:from-primary/80 hover:to-primary active:scale-95'
+                        ? 'gradient-bg text-white hover:scale-[1.02] active:scale-95'
+                        : 'gradient-border text-text hover:text-white hover:gradient-bg active:scale-95'
                     }`}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">

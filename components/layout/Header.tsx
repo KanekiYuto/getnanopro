@@ -5,12 +5,7 @@ import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
 import UserButton from '@/components/auth/UserButton';
 import { siteConfig } from '@/config/site';
-
-const navigation = [
-  { name: 'Home', href: '/' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-];
+import { headerNavigation } from '@/config/navigation';
 
 export default function Header() {
   const t = useTranslations('common');
@@ -83,13 +78,13 @@ export default function Header() {
 
             {/* 中间: 导航菜单 (桌面端) */}
             <div className="hidden lg:flex items-center justify-center gap-x-1">
-              {navigation.map((item) => (
+              {headerNavigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
                   className="text-sm font-semibold leading-6 text-text-muted hover:text-text transition-colors duration-200 px-3 py-2 rounded-lg hover:bg-bg-hover"
                 >
-                  {item.name}
+                  {t(`navigation.${item.name}`)}
                 </a>
               ))}
             </div>
@@ -143,14 +138,14 @@ export default function Header() {
         <div className="lg:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-bg-elevated z-[95] overflow-y-auto animate-in slide-in-from-top duration-300">
           <div className="px-4 py-4">
             <div className="flex flex-col space-y-1">
-              {navigation.map((item) => (
+              {headerNavigation.map((item) => (
                 <a
                   key={item.name}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className="block rounded-lg px-4 py-3 text-sm font-medium text-text-muted hover:bg-white/8 hover:text-white transition-all duration-200"
                 >
-                  {item.name}
+                  {t(`navigation.${item.name}`)}
                 </a>
               ))}
             </div>

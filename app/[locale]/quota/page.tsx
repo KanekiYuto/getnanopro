@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import Loading from '@/components/common/Loading';
 
@@ -25,10 +25,28 @@ export default function QuotaPage() {
   const [quotaData, setQuotaData] = useState<QuotaData | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'active' | 'expired'>('active');
+  const activeTabRef = useRef<HTMLButtonElement>(null);
+  const expiredTabRef = useRef<HTMLButtonElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
   useEffect(() => {
     fetchQuotaList();
   }, []);
+
+  // 更新下划线位置
+  useEffect(() => {
+    const updateIndicator = () => {
+      const currentRef = activeTab === 'active' ? activeTabRef : expiredTabRef;
+      if (currentRef.current) {
+        const { offsetLeft, offsetWidth } = currentRef.current;
+        setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
+      }
+    };
+
+    updateIndicator();
+    window.addEventListener('resize', updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
+  }, [activeTab]);
 
   const fetchQuotaList = async () => {
     try {
@@ -94,7 +112,7 @@ export default function QuotaPage() {
           return (
             <div
               key={quota.id}
-              className="group bg-gradient-to-br from-bg-elevated to-bg-elevated/50 border border-border rounded-2xl p-6 hover:border-primary/40 transition-all duration-300 cursor-pointer"
+              className="group bg-gradient-to-br from-bg-elevated to-bg-elevated/50 gradient-border rounded-2xl p-6 transition-all duration-300 cursor-pointer"
             >
               {/* 配额类型和状态 */}
               <div className="flex items-start justify-between mb-5">
@@ -185,7 +203,7 @@ export default function QuotaPage() {
 
       <div className="px-6">
         {/* 总配额卡片 */}
-        <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent border border-primary/20 rounded-3xl p-8 mb-6 overflow-hidden group hover:border-primary/40 transition-all duration-300">
+        <div className="relative bg-gradient-to-br from-primary/10 via-primary/5 to-transparent gradient-border-colorful rounded-3xl p-8 mb-6 overflow-hidden group transition-all duration-300">
           {/* 背景装饰 */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-primary/10 transition-all duration-500" />
           <div className="absolute bottom-0 left-0 w-48 h-48 bg-primary/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-primary/10 transition-all duration-500" />
@@ -194,7 +212,7 @@ export default function QuotaPage() {
             <div className="flex items-center gap-6">
               <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 rounded-2xl blur-xl animate-pulse" />
-                <div className="relative p-5 rounded-2xl bg-gradient-to-br from-primary to-primary-hover">
+                <div className="relative p-5 rounded-2xl gradient-bg">
                   <svg
                     className="w-10 h-10 text-white"
                     fill="none"
@@ -236,13 +254,14 @@ export default function QuotaPage() {
 
         {/* 标签页切换 */}
         <div className="mb-8">
-          <div className="flex items-center gap-8 border-b border-border">
+          <div className="relative flex items-center gap-8 border-b border-border">
             <button
+              ref={activeTabRef}
               onClick={() => setActiveTab('active')}
               className={`relative pb-4 font-semibold transition-all duration-300 cursor-pointer ${
                 activeTab === 'active'
-                  ? 'text-white scale-105'
-                  : 'text-text-muted hover:text-white hover:scale-102'
+                  ? 'text-white'
+                  : 'text-text-muted hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -251,7 +270,7 @@ export default function QuotaPage() {
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs font-bold transition-all duration-300 ${
                       activeTab === 'active'
-                        ? 'bg-primary/20 text-primary scale-110'
+                        ? 'bg-primary/20 text-primary'
                         : 'bg-bg-hover text-text-dim'
                     }`}
                   >
@@ -259,19 +278,14 @@ export default function QuotaPage() {
                   </span>
                 )}
               </div>
-              {activeTab === 'active' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full animate-in slide-in-from-bottom-2 duration-300" />
-              )}
-              {activeTab === 'active' && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-4 bg-primary/20 blur-xl rounded-full" />
-              )}
             </button>
             <button
+              ref={expiredTabRef}
               onClick={() => setActiveTab('expired')}
               className={`relative pb-4 font-semibold transition-all duration-300 cursor-pointer ${
                 activeTab === 'expired'
-                  ? 'text-white scale-105'
-                  : 'text-text-muted hover:text-white hover:scale-102'
+                  ? 'text-white'
+                  : 'text-text-muted hover:text-white'
               }`}
             >
               <div className="flex items-center gap-2">
@@ -280,7 +294,7 @@ export default function QuotaPage() {
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs font-bold transition-all duration-300 ${
                       activeTab === 'expired'
-                        ? 'bg-primary/20 text-primary scale-110'
+                        ? 'bg-primary/20 text-primary'
                         : 'bg-bg-hover text-text-dim'
                     }`}
                   >
@@ -288,13 +302,18 @@ export default function QuotaPage() {
                   </span>
                 )}
               </div>
-              {activeTab === 'expired' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-primary to-transparent rounded-full animate-in slide-in-from-bottom-2 duration-300" />
-              )}
-              {activeTab === 'expired' && (
-                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-4 bg-primary/20 blur-xl rounded-full" />
-              )}
             </button>
+
+            {/* 滑动下划线指示器 */}
+            <div
+              className="absolute bottom-0 h-0.5 rounded-full transition-all duration-500 ease-out gradient-bg"
+              style={{ left: `${indicatorStyle.left}px`, width: `${indicatorStyle.width}px` }}
+            />
+            {/* 发光效果 */}
+            <div
+              className="absolute bottom-0 h-4 w-10 rounded-full bg-primary/20 blur-xl transition-all duration-500 ease-out"
+              style={{ left: `${indicatorStyle.left + indicatorStyle.width / 2 - 20}px` }}
+            />
           </div>
         </div>
 
