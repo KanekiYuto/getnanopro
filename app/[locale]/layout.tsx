@@ -9,11 +9,7 @@ import ModalProvider from '@/components/providers/ModalProvider';
 import NavigationProgress from '@/components/providers/NavigationProgress';
 import { siteConfig } from '@/config/site';
 import { locales, defaultLocale } from '@/i18n/config';
-import { getServerSession } from '@/lib/auth-helpers';
 import "../globals.css";
-
-// 标记为动态渲染,因为使用了 session (headers)
-export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
@@ -64,17 +60,13 @@ export default async function LocaleLayout({ children, params }: Props) {
     notFound();
   }
 
-  // 并行获取消息和 session,避免阻塞
-  const [messages, initialSession] = await Promise.all([
-    getMessages(),
-    getServerSession(),
-  ]);
+  const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
-          <UserProvider initialSession={initialSession}>
+          <UserProvider>
             <NavigationProgress />
             <PageLayout>{children}</PageLayout>
             <ModalProvider />

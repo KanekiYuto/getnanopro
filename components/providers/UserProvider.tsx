@@ -7,38 +7,13 @@ import { USER_TYPE } from '@/config/constants';
 
 interface UserProviderProps {
   children: React.ReactNode;
-  initialSession?: any; // 服务端预加载的 session 数据
 }
 
-export default function UserProvider({ children, initialSession }: UserProviderProps) {
+export default function UserProvider({ children }: UserProviderProps) {
   const { data: session, isPending } = useSession();
   const { setUser, setLoading, clearUser, setQuotaInfo, setQuotaLoading } = useUserStore();
 
-  // 如果有服务端预加载的 session,立即使用它
   useEffect(() => {
-    if (initialSession?.user) {
-      const userType = (initialSession.user as any).userType || USER_TYPE.FREE;
-      startTransition(() => {
-        setUser({
-          id: initialSession.user.id,
-          name: initialSession.user.name || '',
-          email: initialSession.user.email || '',
-          emailVerified: initialSession.user.emailVerified,
-          image: initialSession.user.image ?? '',
-          userType: userType,
-          createdAt: new Date((initialSession.user as any).createdAt || Date.now()),
-          updatedAt: new Date((initialSession.user as any).updatedAt || Date.now()),
-        });
-      });
-    }
-  }, [initialSession]);
-
-  useEffect(() => {
-    // 如果已经有初始 session 并且客户端 session 还在加载,则不阻塞
-    if (initialSession && isPending) {
-      return;
-    }
-
     // 使用 startTransition 降低优先级,不阻塞渲染
     startTransition(() => {
       if (isPending) {
