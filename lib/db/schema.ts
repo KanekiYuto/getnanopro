@@ -11,6 +11,8 @@ export const user = pgTable('user', {
   updatedAt: timestamp('updatedAt').notNull(),
   // 用户类型: free(免费), basic(基础版), pro(专业版)
   userType: text('user_type').notNull().default('free'),
+  // 当前活跃的订阅ID (关联 subscription 表)
+  currentSubscriptionId: uuid('current_subscription_id'),
 });
 
 // Better Auth 会话表
@@ -74,6 +76,42 @@ export const quota = pgTable('quota', {
   issuedAt: timestamp('issued_at').notNull(),
   // 过期时间 (null 表示永不过期)
   expiresAt: timestamp('expires_at'),
+  // 创建时间
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  // 更新时间
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// 订阅信息表
+export const subscription = pgTable('subscription', {
+  // UUID 主键,由数据库自动生成
+  id: uuid('id').primaryKey().defaultRandom(),
+  // 用户ID
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // 支付平台: creem, stripe, paypal 等
+  paymentPlatform: text('payment_platform').notNull(),
+  // 支付平台的订阅ID
+  paymentSubscriptionId: text('payment_subscription_id').notNull(),
+  // 支付平台的客户ID
+  paymentCustomerId: text('payment_customer_id'),
+  // 订阅计划类型: monthly_basic, monthly_pro, yearly_basic, yearly_pro
+  planType: text('plan_type').notNull(),
+  // 订阅状态: active(活跃), canceled(已取消), expired(已过期), pending(待支付)
+  status: text('status').notNull().default('pending'),
+  // 订阅金额(分/美分)
+  amount: integer('amount').notNull(),
+  // 货币类型: USD, CNY 等
+  currency: text('currency').notNull().default('USD'),
+  // 订阅开始时间
+  startedAt: timestamp('started_at'),
+  // 订阅结束时间
+  expiresAt: timestamp('expires_at'),
+  // 下次续费时间
+  nextBillingAt: timestamp('next_billing_at'),
+  // 取消时间
+  canceledAt: timestamp('canceled_at'),
   // 创建时间
   createdAt: timestamp('created_at').notNull().defaultNow(),
   // 更新时间

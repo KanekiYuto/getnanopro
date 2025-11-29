@@ -15,6 +15,20 @@
       "when": 1764261107482,
       "tag": "0001_overrated_anthem",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1764428664122,
+      "tag": "0002_great_the_anarchist",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1764428821721,
+      "tag": "0003_wide_felicia_hardy",
+      "breakpoints": true
     }
   ]
 }

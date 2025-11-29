@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
 import LoginRequired from '@/components/common/LoginRequired';
@@ -29,6 +29,7 @@ export default function QuotaPage() {
   const activeTabRef = useRef<HTMLButtonElement>(null);
   const expiredTabRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+  const isInitialMount = useRef(true);
 
   // 获取总配额（仅在已登录时）
   useEffect(() => {
@@ -49,7 +50,7 @@ export default function QuotaPage() {
   }, [activeTab, activeQuotas, expiredQuotas, user]);
 
   // 更新下划线位置
-  useEffect(() => {
+  useLayoutEffect(() => {
     const updateIndicator = () => {
       const currentRef = activeTab === 'active' ? activeTabRef : expiredTabRef;
       if (currentRef.current) {
@@ -58,9 +59,24 @@ export default function QuotaPage() {
       }
     };
 
-    updateIndicator();
+    if (isInitialMount.current) {
+      // 初始挂载时使用双重 RAF 确保布局完成
+      isInitialMount.current = false;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          updateIndicator();
+        });
+      });
+    } else {
+      // 后续切换立即更新
+      updateIndicator();
+    }
+
     window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
+
+    return () => {
+      window.removeEventListener('resize', updateIndicator);
+    };
   }, [activeTab]);
 
   const fetchTotalQuota = async () => {

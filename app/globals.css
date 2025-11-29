@@ -157,6 +157,11 @@ body {
   background-clip: text;
 }
 
+/* 徽章背景渐变 */
+.badge-gradient-bg {
+  background-color: #3F3F46;
+}
+
 * {
   border-color: var(--color-border);
   outline-color: color-mix(in srgb, var(--color-ring) 50%, transparent);

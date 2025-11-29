@@ -40,10 +40,10 @@ export default function QuotaTabSwitch({
             {t('tabs.active')}
             {activeQuotasCount > 0 && (
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-bold transition-all duration-300 ${
+                className={`min-w-[24px] h-6 px-2 flex items-center justify-center rounded text-xs font-medium transition-all duration-300 ${
                   activeTab === 'active'
-                    ? 'bg-primary/20 text-primary'
-                    : 'bg-bg-hover text-text-dim'
+                    ? 'bg-white text-black'
+                    : 'badge-gradient-bg text-gray-400'
                 }`}
               >
                 {activeQuotasCount}
@@ -64,10 +64,10 @@ export default function QuotaTabSwitch({
             {t('tabs.expired')}
             {expiredQuotasCount > 0 && (
               <span
-                className={`px-2 py-0.5 rounded-full text-xs font-bold transition-all duration-300 ${
+                className={`min-w-[24px] h-6 px-2 flex items-center justify-center rounded text-xs font-medium transition-all duration-300 ${
                   activeTab === 'expired'
-                    ? 'bg-primary/20 text-primary'
-                    : 'bg-bg-hover text-text-dim'
+                    ? 'bg-white text-black'
+                    : 'badge-gradient-bg text-gray-400'
                 }`}
               >
                 {expiredQuotasCount}
@@ -77,15 +77,19 @@ export default function QuotaTabSwitch({
         </button>
 
         {/* 滑动下划线指示器 */}
-        <div
-          className="absolute bottom-0 h-0.5 rounded-full transition-all duration-500 ease-out gradient-bg"
-          style={{ left: `${indicatorStyle.left}px`, width: `${indicatorStyle.width}px` }}
-        />
-        {/* 发光效果 */}
-        <div
-          className="absolute bottom-0 h-4 w-10 rounded-full bg-primary/20 blur-xl transition-all duration-500 ease-out"
-          style={{ left: `${indicatorStyle.left + indicatorStyle.width / 2 - 20}px` }}
-        />
+        {indicatorStyle.width > 0 && (
+          <>
+            <div
+              className="absolute bottom-0 h-0.5 rounded-full transition-all duration-500 ease-out gradient-bg"
+              style={{ left: `${indicatorStyle.left}px`, width: `${indicatorStyle.width}px` }}
+            />
+            {/* 发光效果 */}
+            <div
+              className="absolute bottom-0 h-4 w-10 rounded-full bg-primary/20 blur-xl transition-all duration-500 ease-out"
+              style={{ left: `${indicatorStyle.left + indicatorStyle.width / 2 - 20}px` }}
+            />
+          </>
+        )}
       </div>
     </div>
   );
