@@ -12,6 +12,9 @@ import { locales, defaultLocale } from '@/i18n/config';
 import { getServerSession } from '@/lib/auth-helpers';
 import "../globals.css";
 
+// 标记为动态渲染,因为使用了 session (headers)
+export const dynamic = 'force-dynamic';
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common' });
