@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import TextToImageGenerator from './TextToImageGenerator';
@@ -65,35 +65,8 @@ export default function AIGenerator({ defaultTab }: AIGeneratorProps) {
   // 验证并设置默认 tab
   const validDefaultTab = tabs.find((tab) => tab.key === defaultTab) ? defaultTab : tabs[0]?.key;
   const [activeTab, setActiveTab] = useState(validDefaultTab || '');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const currentTab = tabs.find((tab) => tab.key === activeTab);
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <motion.div
-            className="inline-block w-12 h-12 border-4 rounded-full mb-4"
-            style={{
-              borderColor: 'var(--color-primary)',
-              borderTopColor: 'transparent',
-            }}
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
-          />
-          <p className="text-text-muted">加载中...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6 pb-8">

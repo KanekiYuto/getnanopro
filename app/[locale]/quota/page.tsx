@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
-import Loading from '@/components/common/Loading';
+import { useLoading } from '@/hooks/useLoading';
 
 interface QuotaItem {
   id: string;
@@ -23,11 +23,13 @@ interface QuotaData {
 export default function QuotaPage() {
   const t = useTranslations('quota');
   const [quotaData, setQuotaData] = useState<QuotaData | null>(null);
-  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'active' | 'expired'>('active');
   const activeTabRef = useRef<HTMLButtonElement>(null);
   const expiredTabRef = useRef<HTMLButtonElement>(null);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
+
+  // 自动管理页面加载状态
+  useLoading();
 
   useEffect(() => {
     fetchQuotaList();
@@ -58,8 +60,6 @@ export default function QuotaPage() {
       }
     } catch (error) {
       console.error('Failed to fetch quota list:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -186,10 +186,6 @@ export default function QuotaPage() {
       </div>
     );
   };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <div className="space-y-6 pb-8">

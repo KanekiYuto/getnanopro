@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import PageLayout from '@/components/layout/PageLayout';
 import UserProvider from '@/components/providers/UserProvider';
+import ModalProvider from '@/components/providers/ModalProvider';
 import { siteConfig } from '@/config/site';
 import { locales, defaultLocale } from '@/i18n/config';
 import "../globals.css";
@@ -63,6 +64,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider messages={messages}>
           <UserProvider>
             <PageLayout>{children}</PageLayout>
+            <ModalProvider />
           </UserProvider>
         </NextIntlClientProvider>
       </body>

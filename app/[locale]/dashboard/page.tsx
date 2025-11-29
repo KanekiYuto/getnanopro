@@ -2,24 +2,26 @@
 
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
-import Loading from '@/components/common/Loading';
-import LoginModal from '@/components/auth/LoginModal';
+import useModalStore from '@/store/useModalStore';
+import { useLoading } from '@/hooks/useLoading';
 import DashboardHeader from './components/DashboardHeader';
 import QuotaCard from './components/QuotaCard';
 import StatCard from './components/StatCard';
 import QuickActions from './components/QuickActions';
 import RecentGenerations from './components/RecentGenerations';
-import { useState } from 'react';
 
 export default function DashboardPage() {
   const { user, isLoading, quotaInfo } = useUserStore();
+  const { openLoginModal } = useModalStore();
   const t = useTranslations('dashboard.stats');
   const tCommon = useTranslations('dashboard');
-  const [showLoginModal, setShowLoginModal] = useState(false);
 
-  // 加载中状态
+  // 自动管理页面加载状态
+  useLoading();
+
+  // 加载中时返回 null，由全局 Loading 显示
   if (isLoading) {
-    return <Loading />;
+    return null;
   }
 
   // 未登录状态 - 显示 DashboardHeader 和登录提示
@@ -53,7 +55,7 @@ export default function DashboardPage() {
 
             {/* 登录按钮 */}
             <button
-              onClick={() => setShowLoginModal(true)}
+              onClick={openLoginModal}
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-bg text-white font-semibold transition-all hover:scale-105 cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,9 +103,6 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-
-        {/* 登录模态框 */}
-        <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
       </div>
     );
   }

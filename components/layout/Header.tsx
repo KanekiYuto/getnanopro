@@ -6,62 +6,31 @@ import { useTranslations } from 'next-intl';
 import UserButton from '@/components/auth/UserButton';
 import { siteConfig } from '@/config/site';
 import { headerNavigation } from '@/config/navigation';
+import { PanelLeft, Menu, X } from 'lucide-react';
 
 export default function Header() {
   const t = useTranslations('common');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isCollapsed, toggleSidebar, toggleCollapsed } = useSidebarStore();
+  const { toggleSidebar } = useSidebarStore();
 
   return (
     <>
-      <header className="sticky top-0 z-[100] bg-bg-elevated border-b border-border h-[60px] flex-shrink-0">
+      <header className="sticky top-0 z-[250] bg-bg-elevated border-b border-border lg:border-border border-border/80 h-[60px] flex-shrink-0 shadow-sm">
         <nav className="h-full px-4 lg:px-8" aria-label="Global">
           <div className="w-full h-full grid grid-cols-3 lg:grid-cols-[1fr_auto_1fr] items-center gap-4">
             {/* 左侧: 侧边栏按钮 */}
             <div className="flex justify-start items-center gap-2">
-              {/* Sidebar 收缩按钮 - 仅在桌面端显示 */}
-              <button
-                type="button"
-                className="hidden lg:inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
-                onClick={toggleCollapsed}
-                title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-              >
-                <span className="sr-only">
-                  {isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-                </span>
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              {/* Sidebar 切换按钮 - 仅在移动端显示，菜单打开时隐藏 */}
+              {!mobileMenuOpen && (
+                <button
+                  type="button"
+                  className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
+                  onClick={toggleSidebar}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d={isCollapsed ? 'M9 5l7 7-7 7' : 'M15 19l-7-7 7-7'}
-                  />
-                </svg>
-              </button>
-
-              {/* Sidebar 切换按钮 - 仅在移动端显示 */}
-              <button
-                type="button"
-                className="lg:hidden inline-flex items-center justify-center rounded-lg p-2 text-text-muted hover:bg-white/10 hover:text-white transition-colors duration-200 cursor-pointer"
-                onClick={toggleSidebar}
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                  <path d="M9 3v18"></path>
-                </svg>
-                <span className="sr-only">Toggle Sidebar</span>
-              </button>
+                  <PanelLeft className="h-5 w-5" />
+                  <span className="sr-only">Toggle Sidebar</span>
+                </button>
+              )}
             </div>
 
             {/* 中间: Logo - 仅在移动端显示并居中 */}
@@ -70,7 +39,7 @@ export default function Header() {
                 href="/"
                 className="flex items-center hover:opacity-80 transition-opacity duration-200"
               >
-                <p className="text-xl font-bold text-white">
+                <p className="text-xl font-bold gradient-text">
                   {siteConfig.name}
                 </p>
               </a>
@@ -91,8 +60,10 @@ export default function Header() {
 
             {/* 右侧: 用户按钮和移动端菜单按钮 */}
             <div className="flex justify-end items-center gap-2">
-              {/* 用户按钮 */}
-              <UserButton />
+              {/* 用户按钮 - 桌面端显示 */}
+              <div className="hidden lg:block">
+                <UserButton />
+              </div>
 
               {/* 移动端菜单按钮 */}
               <button
@@ -101,23 +72,11 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               >
                 <span className="sr-only">Open main menu</span>
-                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  {mobileMenuOpen ? (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  ) : (
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 6h16M4 12h16M4 18h16"
-                    />
-                  )}
-                </svg>
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" />
+                ) : (
+                  <Menu className="h-5 w-5" />
+                )}
               </button>
             </div>
           </div>
@@ -128,15 +87,16 @@ export default function Header() {
       {/* 移动端菜单打开时的遮罩层 */}
       {mobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 top-[60px] bg-black/40 z-[90] animate-in fade-in duration-200"
+          className="lg:hidden fixed inset-0 top-[60px] bg-black/40 z-[260] animate-in fade-in duration-200"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
       {/* 移动端菜单面板 - 占满剩余高度 */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-bg-elevated z-[95] overflow-y-auto animate-in slide-in-from-top duration-300">
-          <div className="px-4 py-4">
+        <div className="lg:hidden fixed top-[60px] left-0 right-0 bottom-0 bg-bg-elevated z-[270] overflow-y-auto animate-in slide-in-from-top duration-300">
+          <div className="px-4 py-4 flex flex-col h-full">
+            {/* 导航菜单 */}
             <div className="flex flex-col space-y-1">
               {headerNavigation.map((item) => (
                 <a
@@ -148,6 +108,11 @@ export default function Header() {
                   {t(`navigation.${item.name}`)}
                 </a>
               ))}
+            </div>
+
+            {/* 底部用户按钮 */}
+            <div className="mt-auto pt-4 border-t border-border">
+              <UserButton fullWidth />
             </div>
           </div>
         </div>
