@@ -66,19 +66,16 @@ export default function QuickActions() {
   ];
 
   return (
-    <div className="bg-bg-elevated rounded-xl border border-border p-8 mb-8">
+    <div className="rounded-xl gradient-border p-8 mb-8">
       <h2 className="text-xl font-bold text-white mb-6">{t('title')}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {actions.map((action, index) => (
           <button
             key={index}
-            className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-dashed border-border hover:border-current hover:bg-current/5 transition-all group cursor-pointer"
-            style={{
-              ['--hover-border-color' as any]: action.color,
-            }}
+            className="flex flex-col items-center justify-center p-6 rounded-lg border-2 border-dashed border-border hover:border-primary/50 hover:bg-primary/5 transition-all group cursor-pointer"
           >
             <div
-              className={`w-12 h-12 rounded-lg ${action.bgColor} ${action.hoverBgColor} flex items-center justify-center mb-3 transition-all`}
+              className={`w-12 h-12 rounded-lg ${action.bgColor} ${action.hoverBgColor} flex items-center justify-center mb-3 transition-all group-hover:scale-110`}
             >
               <div className={`w-6 h-6 ${action.color} group-hover:text-white transition-colors`}>
                 {action.icon}

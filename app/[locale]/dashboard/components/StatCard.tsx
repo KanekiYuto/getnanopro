@@ -75,7 +75,7 @@ export default function StatCard({ icon, value, label, badge, color, expiryInfo,
 
   return (
     <div
-      className={`group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl border border-border p-6 ${styles.border} transition-all duration-300 overflow-hidden ${href ? 'cursor-pointer' : ''}`}
+      className="group relative bg-gradient-to-br from-bg-elevated to-bg-elevated/50 rounded-2xl gradient-border p-6 transition-all duration-300 overflow-hidden cursor-pointer"
       onClick={handleClick}
     >
       <div className="relative">
