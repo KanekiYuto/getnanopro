@@ -42,10 +42,10 @@ export default function PrivacyPage() {
                 {t('introduction.title')}
               </h2>
               <p className="text-text-muted leading-relaxed mb-4">
-                {t('introduction.content1')}
+                {t('introduction.content1', { siteName: siteConfig.name })}
               </p>
               <p className="text-text-muted leading-relaxed">
-                {t('introduction.content2')}
+                {t('introduction.content2', { siteName: siteConfig.name })}
               </p>
             </section>
 

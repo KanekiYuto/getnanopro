@@ -7,7 +7,8 @@ import { eq, gte, desc } from 'drizzle-orm';
 
 /**
  * 获取用户配额列表
- * GET /api/quota/list
+ * GET /api/quota/list?type=active|expired
+ * 支持通过 type 参数获取指定类型的配额
  */
 export async function GET(request: NextRequest) {
   try {
@@ -27,6 +28,10 @@ export async function GET(request: NextRequest) {
     const userId = session.user.id;
     const now = new Date();
 
+    // 获取查询参数
+    const { searchParams } = new URL(request.url);
+    const type = searchParams.get('type'); // 'active' | 'expired' | null
+
     // 获取所有配额(包括已过期和未过期的)
     const allQuotas = await db
       .select()
@@ -42,6 +47,32 @@ export async function GET(request: NextRequest) {
       (q) => q.expiresAt && q.expiresAt <= now
     );
 
+    const mapQuota = (q: typeof allQuotas[0]) => ({
+      id: q.id,
+      type: q.type,
+      amount: q.amount,
+      consumed: q.consumed,
+      available: Math.max(0, q.amount - q.consumed),
+      issuedAt: q.issuedAt,
+      expiresAt: q.expiresAt,
+    });
+
+    // 根据 type 参数返回不同的数据
+    if (type === 'active') {
+      return NextResponse.json({
+        success: true,
+        data: activeQuotas.map(mapQuota),
+      });
+    }
+
+    if (type === 'expired') {
+      return NextResponse.json({
+        success: true,
+        data: expiredQuotas.map(mapQuota),
+      });
+    }
+
+    // 如果没有指定 type，返回所有数据（向后兼容）
     // 计算总可用配额
     let totalAvailable = 0;
     for (const q of activeQuotas) {
@@ -53,24 +84,8 @@ export async function GET(request: NextRequest) {
       success: true,
       data: {
         totalAvailable,
-        activeQuotas: activeQuotas.map((q) => ({
-          id: q.id,
-          type: q.type,
-          amount: q.amount,
-          consumed: q.consumed,
-          available: Math.max(0, q.amount - q.consumed),
-          issuedAt: q.issuedAt,
-          expiresAt: q.expiresAt,
-        })),
-        expiredQuotas: expiredQuotas.map((q) => ({
-          id: q.id,
-          type: q.type,
-          amount: q.amount,
-          consumed: q.consumed,
-          available: Math.max(0, q.amount - q.consumed),
-          issuedAt: q.issuedAt,
-          expiresAt: q.expiresAt,
-        })),
+        activeQuotas: activeQuotas.map(mapQuota),
+        expiredQuotas: expiredQuotas.map(mapQuota),
       },
     });
   } catch (error) {

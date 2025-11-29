@@ -2,16 +2,15 @@
 
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
-import useModalStore from '@/store/useModalStore';
 import { useLoading } from '@/hooks/useLoading';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
-import { LogIn, Copy, TrendingUp } from 'lucide-react';
+import { Copy, TrendingUp } from 'lucide-react';
+import LoginRequired from '@/components/common/LoginRequired';
 
 export default function SettingsPage() {
   const { user, isLoading } = useUserStore();
-  const { openLoginModal } = useModalStore();
   const t = useTranslations('settings');
 
   // 自动管理页面加载状态
@@ -39,36 +38,11 @@ export default function SettingsPage() {
         </div>
 
         {/* 登录提示 */}
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-xl mx-auto">
-            <div className="group relative rounded-2xl sm:rounded-3xl gradient-border-colorful bg-gradient-to-br from-primary/10 via-bg-elevated to-bg-elevated transition-all duration-500">
-              {/* 装饰性背景 */}
-              <div className="absolute inset-0 rounded-2xl sm:rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-
-              {/* 内容 */}
-              <div className="relative p-8 text-center">
-                {/* 标题 */}
-                <h2 className="text-3xl font-bold text-white mb-3">
-                  {t('loginRequired.title')}
-                </h2>
-
-                {/* 描述 */}
-                <p className="text-text-muted mb-8 leading-relaxed">
-                  {t('loginRequired.description')}
-                </p>
-
-                {/* 登录按钮 */}
-                <button
-                  onClick={openLoginModal}
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-bg text-white font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/50 cursor-pointer"
-                >
-                  <LogIn className="w-5 h-5" />
-                  <span>{t('loginRequired.cta')}</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <LoginRequired
+          title={t('loginRequired.title')}
+          description={t('loginRequired.description')}
+          buttonText={t('loginRequired.cta')}
+        />
       </div>
     );
   }

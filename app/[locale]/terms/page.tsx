@@ -42,7 +42,7 @@ export default function TermsPage() {
                 1. {t('acceptance.title')}
               </h2>
               <p className="text-text-muted leading-relaxed mb-4">
-                {t('acceptance.content1')}
+                {t('acceptance.content1', { siteName: siteConfig.name })}
               </p>
               <p className="text-text-muted leading-relaxed">
                 {t('acceptance.content2')}
@@ -54,7 +54,7 @@ export default function TermsPage() {
                 2. {t('serviceDescription.title')}
               </h2>
               <p className="text-text-muted leading-relaxed mb-4">
-                {t('serviceDescription.intro')}
+                {t('serviceDescription.intro', { siteName: siteConfig.name })}
               </p>
               <ul className="list-disc list-inside text-text-muted space-y-2 ml-4">
                 {(t.raw('serviceDescription.items') as string[]).map(
@@ -99,7 +99,7 @@ export default function TermsPage() {
                 5. {t('intellectualProperty.title')}
               </h2>
               <p className="text-text-muted leading-relaxed mb-4">
-                5.1 {t('intellectualProperty.platformContent')}
+                5.1 {t('intellectualProperty.platformContent', { siteName: siteConfig.name })}
               </p>
               <p className="text-text-muted leading-relaxed mb-4">
                 5.2 {t('intellectualProperty.userContent')}
@@ -141,7 +141,7 @@ export default function TermsPage() {
                 8.1 {t('disclaimer.asIs')}
               </p>
               <p className="text-text-muted leading-relaxed mb-4">
-                8.2 {t('disclaimer.liability')}
+                8.2 {t('disclaimer.liability', { siteName: siteConfig.name })}
               </p>
               <p className="text-text-muted leading-relaxed">
                 8.3 {t('disclaimer.responsibility')}
@@ -153,7 +153,7 @@ export default function TermsPage() {
                 9. {t('legalJurisdiction.title')}
               </h2>
               <p className="text-text-muted leading-relaxed mb-4">
-                9.1 {t('legalJurisdiction.law')}
+                9.1 {t('legalJurisdiction.law', { siteName: siteConfig.name })}
               </p>
               <p className="text-text-muted leading-relaxed">
                 9.2 {t('legalJurisdiction.disputes')}
