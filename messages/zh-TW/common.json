@@ -1,6 +1,11 @@
 {
   "language": "語言",
   "loading": "載入中...",
+  "loginRequired": {
+    "title": "登入以繼續",
+    "description": "登入後即可使用完整功能",
+    "buttonText": "立即登入"
+  },
   "seo": {
     "title": "{siteName} - AI 圖像生成工具",
     "description": "使用先進的人工智慧技術，快速生成高品質的專業圖像。簡單、快速、強大的 AI 圖像創作工具。",

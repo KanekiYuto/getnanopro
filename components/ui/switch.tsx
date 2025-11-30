@@ -21,8 +21,8 @@ function Switch({
     <SwitchPrimitive.Root
       data-slot="switch"
       className={cn(
-        "peer inline-flex h-6 w-11 shrink-0 items-center rounded-full border-2 border-transparent outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        "relative overflow-hidden transition-all duration-200 ease-out cursor-pointer",
+        "peer inline-flex h-6 w-11 shrink-0 items-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+        "relative overflow-hidden transition-all duration-300 ease-out cursor-pointer",
         "data-[state=unchecked]:bg-bg-hover",
         className
       )}
@@ -32,19 +32,19 @@ function Switch({
       }}
       {...props}
     >
-      {/* 渐变背景层 - 使用 opacity 和 scale 过渡 */}
+      {/* 渐变背景层 - 使用 opacity 过渡 */}
       <div
         className={cn(
-          "absolute inset-0 rounded-full bg-gradient-to-r from-[rgb(175,64,255)] via-[rgb(91,66,243)] to-[rgb(0,221,235)]",
-          "transition-all duration-200 ease-out",
-          isChecked ? "opacity-100 scale-100" : "opacity-0 scale-90"
+          "absolute inset-0 rounded-full bg-gradient-to-r from-[#C721FF] to-[#FF3466]",
+          "transition-opacity duration-300 ease-out",
+          isChecked ? "opacity-100" : "opacity-0"
         )}
       />
 
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          "pointer-events-none block h-5 w-5 rounded-full bg-white ring-0 transition-all duration-200 ease-out relative z-10",
+          "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-md ring-0 transition-all duration-300 ease-out relative z-10",
           "data-[state=checked]:translate-x-5",
           "data-[state=unchecked]:translate-x-0"
         )}

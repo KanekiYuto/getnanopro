@@ -1,6 +1,10 @@
 {
   "title": "My Quota",
   "subtitle": "Manage and view your available quota",
+  "loginRequired": {
+    "title": "Login to View Quota",
+    "description": "Log in to view your quota usage and history"
+  },
   "summary": {
     "title": "Total Available",
     "credits": "Credits"

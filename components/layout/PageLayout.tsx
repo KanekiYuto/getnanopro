@@ -91,7 +91,7 @@ export default function PageLayout({ children }: PageLayoutProps) {
           {/* 全局 Loading 遮罩层 - 只在白名单页面显示 */}
           {isLoadingEnabled && isLoading && (
             <div className="fixed inset-0 lg:left-64 top-[60px] bg-bg/90 backdrop-blur-md z-[200] flex items-center justify-center">
-              <Loading text="加载中..." fullScreen={false} />
+              <Loading fullScreen={false} />
             </div>
           )}
 

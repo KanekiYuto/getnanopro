@@ -1,10 +1,12 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { useCachedSession, clearSessionCache } from '@/hooks/useCachedSession';
 import { signOut } from '@/lib/auth-client';
 
 // 用户信息展示和退出登录组件
 export default function UserProfile() {
+  const t = useTranslations('auth');
   const { data: session, isPending } = useCachedSession();
 
   // 加载中状态
@@ -45,7 +47,7 @@ export default function UserProfile() {
       {session.user.image && (
         <img
           src={session.user.image}
-          alt={session.user.name || '用户'}
+          alt={session.user.name || t('user')}
           className="w-8 h-8 rounded-full border-2 border-primary"
         />
       )}
@@ -60,7 +62,7 @@ export default function UserProfile() {
         onClick={handleSignOut}
         className="px-3 py-1.5 text-sm rounded-lg border border-border hover:border-primary/50 hover:bg-bg-hover text-text-muted hover:text-text transition-all cursor-pointer"
       >
-        退出
+        {t('logout')}
       </button>
     </div>
   );

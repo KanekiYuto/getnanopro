@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useCachedSession, clearSessionCache } from '@/hooks/useCachedSession';
 import { signOut } from '@/lib/auth-client';
 import useModalStore from '@/store/useModalStore';
@@ -11,6 +12,7 @@ interface UserButtonProps {
 }
 
 export default function UserButton({ fullWidth = false }: UserButtonProps) {
+  const t = useTranslations('auth');
   const { data: session, isPending } = useCachedSession();
   const { openLoginModal } = useModalStore();
   const [showDropdown, setShowDropdown] = useState(false);
@@ -66,7 +68,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
           fullWidth ? 'w-full py-3' : 'px-4 py-2'
         }`}
       >
-        登录
+        {t('login')}
       </button>
     );
   }
@@ -82,7 +84,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
             {session.user.image ? (
               <img
                 src={session.user.image}
-                alt={session.user.name || '用户'}
+                alt={session.user.name || t('user')}
                 className="w-14 h-14 rounded-full"
               />
             ) : (
@@ -92,7 +94,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
             )}
             <div className="flex-1 text-left min-w-0">
               <p className="text-base font-bold text-white truncate">
-                {session.user.name || '用户'}
+                {session.user.name || t('user')}
               </p>
               <p className="text-xs text-text-muted truncate mt-1">
                 {session.user.email}
@@ -108,7 +110,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
             className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-white hover:bg-white/10 transition-all duration-200 rounded-lg group"
           >
             <LayoutDashboard className="w-5 h-5 text-text-muted group-hover:text-white transition-colors" />
-            <span>仪表板</span>
+            <span>{t('menu.dashboard')}</span>
           </a>
 
           <a
@@ -116,7 +118,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
             className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-white hover:bg-white/10 transition-all duration-200 rounded-lg group"
           >
             <Settings className="w-5 h-5 text-text-muted group-hover:text-white transition-colors" />
-            <span>设置</span>
+            <span>{t('menu.settings')}</span>
           </a>
 
           {/* 登出按钮 */}
@@ -125,7 +127,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
             className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-400 hover:bg-white/10 hover:text-red-300 transition-all duration-200 cursor-pointer rounded-lg group"
           >
             <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors" />
-            <span>退出登录</span>
+            <span>{t('menu.logout')}</span>
           </button>
         </div>
       </div>
@@ -142,7 +144,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
         {session.user.image ? (
           <img
             src={session.user.image}
-            alt={session.user.name || '用户'}
+            alt={session.user.name || t('user')}
             className="w-9 h-9 rounded-full border-2 border-border"
           />
         ) : (
@@ -161,7 +163,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
               {session.user.image ? (
                 <img
                   src={session.user.image}
-                  alt={session.user.name || '用户'}
+                  alt={session.user.name || t('user')}
                   className="w-12 h-12 rounded-full"
                 />
               ) : (
@@ -171,7 +173,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
               )}
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-semibold text-white truncate">
-                  {session.user.name || '用户'}
+                  {session.user.name || t('user')}
                 </p>
                 <p className="text-xs text-text-muted truncate">
                   {session.user.email}
@@ -188,7 +190,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
               onClick={() => setShowDropdown(false)}
             >
               <LayoutDashboard className="w-4 h-4" />
-              <span>仪表板</span>
+              <span>{t('menu.dashboard')}</span>
             </a>
 
             <a
@@ -197,7 +199,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
               onClick={() => setShowDropdown(false)}
             >
               <Settings className="w-4 h-4" />
-              <span>设置</span>
+              <span>{t('menu.settings')}</span>
             </a>
           </div>
 
@@ -208,7 +210,7 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400 hover:bg-bg-hover hover:text-red-300 transition-colors cursor-pointer"
             >
               <LogOut className="w-4 h-4" />
-              <span>退出登录</span>
+              <span>{t('menu.logout')}</span>
             </button>
           </div>
         </div>

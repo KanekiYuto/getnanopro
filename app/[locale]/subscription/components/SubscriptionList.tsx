@@ -8,6 +8,7 @@ interface SubscriptionRecord {
   paymentSubscriptionId: string;
   paymentCustomerId: string | null;
   planType: string;
+  nextPlanType: string | null;
   status: string;
   amount: number;
   currency: string;

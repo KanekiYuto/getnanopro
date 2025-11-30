@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { LogIn } from 'lucide-react';
 import useModalStore from '@/store/useModalStore';
 
@@ -20,14 +21,20 @@ interface LoginRequiredProps {
 }
 
 export default function LoginRequired({
-  title = '登录以继续',
-  description = '登录后即可使用完整功能',
+  title,
+  description,
   icon,
-  buttonText = '立即登录',
+  buttonText,
   features,
   maxWidth = 'xl',
 }: LoginRequiredProps) {
+  const t = useTranslations('common.loginRequired');
   const { openLoginModal } = useModalStore();
+
+  // 使用国际化的默认值
+  const finalTitle = title || t('title');
+  const finalDescription = description || t('description');
+  const finalButtonText = buttonText || t('buttonText');
 
   const maxWidthClasses = {
     sm: 'max-w-sm',
@@ -56,12 +63,12 @@ export default function LoginRequired({
 
             {/* 标题 */}
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-4">
-              {title}
+              {finalTitle}
             </h2>
 
             {/* 描述 */}
             <p className="text-text-muted mb-8 leading-relaxed">
-              {description}
+              {finalDescription}
             </p>
 
             {/* 登录按钮 */}
@@ -70,7 +77,7 @@ export default function LoginRequired({
               className="inline-flex items-center gap-2 px-8 py-4 rounded-xl gradient-bg text-white font-semibold transition-all hover:scale-105 hover:shadow-lg hover:shadow-primary/50 cursor-pointer"
             >
               <LogIn className="w-5 h-5" />
-              <span>{buttonText}</span>
+              <span>{finalButtonText}</span>
             </button>
           </div>
         </div>

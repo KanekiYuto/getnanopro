@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useLayoutEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
 import LoginRequired from '@/components/common/LoginRequired';
@@ -26,10 +26,6 @@ export default function QuotaPage() {
   const [activeQuotas, setActiveQuotas] = useState<QuotaItem[] | null>(null);
   const [expiredQuotas, setExpiredQuotas] = useState<QuotaItem[] | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'expired'>('active');
-  const activeTabRef = useRef<HTMLButtonElement>(null);
-  const expiredTabRef = useRef<HTMLButtonElement>(null);
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
-  const isInitialMount = useRef(true);
 
   // 获取总配额（仅在已登录时）
   useEffect(() => {
@@ -48,36 +44,6 @@ export default function QuotaPage() {
       fetchExpiredQuotas();
     }
   }, [activeTab, activeQuotas, expiredQuotas, user]);
-
-  // 更新下划线位置
-  useLayoutEffect(() => {
-    const updateIndicator = () => {
-      const currentRef = activeTab === 'active' ? activeTabRef : expiredTabRef;
-      if (currentRef.current) {
-        const { offsetLeft, offsetWidth } = currentRef.current;
-        setIndicatorStyle({ left: offsetLeft, width: offsetWidth });
-      }
-    };
-
-    if (isInitialMount.current) {
-      // 初始挂载时使用双重 RAF 确保布局完成
-      isInitialMount.current = false;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          updateIndicator();
-        });
-      });
-    } else {
-      // 后续切换立即更新
-      updateIndicator();
-    }
-
-    window.addEventListener('resize', updateIndicator);
-
-    return () => {
-      window.removeEventListener('resize', updateIndicator);
-    };
-  }, [activeTab]);
 
   const fetchTotalQuota = async () => {
     try {
@@ -134,8 +100,8 @@ export default function QuotaPage() {
 
         {/* 登录提示 */}
         <LoginRequired
-          title="登录查看配额"
-          description="登录后即可查看您的配额使用情况和历史记录"
+          title={t('loginRequired.title')}
+          description={t('loginRequired.description')}
           icon={
             <svg className="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -173,11 +139,8 @@ export default function QuotaPage() {
         <QuotaTabSwitch
           activeTab={activeTab}
           setActiveTab={setActiveTab}
-          activeTabRef={activeTabRef}
-          expiredTabRef={expiredTabRef}
           activeQuotasCount={activeQuotas?.length || 0}
           expiredQuotasCount={expiredQuotas?.length || 0}
-          indicatorStyle={indicatorStyle}
         />
 
         {/* 配额列表 */}

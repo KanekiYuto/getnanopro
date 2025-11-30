@@ -68,15 +68,15 @@ export default function SubscriptionPage() {
         {/* 页面标题 */}
         <div className="bg-bg-elevated border-b border-border">
           <div className="px-6 py-8">
-            <h1 className="text-3xl font-bold text-white mb-2">订阅管理</h1>
-            <p className="text-text-muted">查看和管理您的订阅信息</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
+            <p className="text-text-muted">{t('subtitle')}</p>
           </div>
         </div>
 
         {/* 登录提示 */}
         <LoginRequired
-          title="登录查看订阅"
-          description="登录后即可查看和管理您的订阅信息"
+          title={t('login.title')}
+          description={t('login.description')}
           icon={
             <svg className="w-10 h-10 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path
@@ -98,8 +98,8 @@ export default function SubscriptionPage() {
       {/* 页面标题 */}
       <div className="bg-bg-elevated border-b border-border">
         <div className="px-6 py-8">
-          <h1 className="text-3xl font-bold text-white mb-2">订阅管理</h1>
-          <p className="text-text-muted">查看和管理您的订阅信息</p>
+          <h1 className="text-3xl font-bold text-white mb-2">{t('title')}</h1>
+          <p className="text-text-muted">{t('subtitle')}</p>
         </div>
       </div>
 

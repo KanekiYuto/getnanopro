@@ -56,6 +56,7 @@ function Icon({ name, className }: { name: string; className?: string }) {
 
 // 用户区域组件
 function UserSection() {
+  const t = useTranslations('auth');
   const { data: session, isPending } = useCachedSession();
   const { openLoginModal } = useModalStore();
   const [showMenu, setShowMenu] = useState(false);
@@ -118,7 +119,7 @@ function UserSection() {
         onClick={openLoginModal}
         className="flex w-full items-center justify-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all cursor-pointer gradient-bg text-white hover:brightness-110"
       >
-        <span>登录</span>
+        <span>{t('login')}</span>
       </motion.button>
     );
   }
@@ -141,7 +142,7 @@ function UserSection() {
         {session.user.image ? (
           <img
             src={session.user.image}
-            alt={session.user.name || '用户'}
+            alt={session.user.name || t('user')}
             className="w-8 h-8 rounded-full gradient-border shrink-0"
           />
         ) : (
@@ -151,7 +152,7 @@ function UserSection() {
         )}
         <div className="flex-1 text-left min-w-0">
           <div className="font-medium text-white text-sm truncate">
-            {session.user.name || '用户'}
+            {session.user.name || t('user')}
           </div>
           <div className="text-xs text-text-muted truncate">
             {session.user.email}
@@ -180,7 +181,7 @@ function UserSection() {
               className="flex w-full items-center gap-3 px-4 py-3 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-colors cursor-pointer bg-bg-elevated"
             >
               <LogOut className="w-5 h-5" />
-              <span>退出登录</span>
+              <span>{t('menu.logout')}</span>
             </button>
           </motion.div>
         )}

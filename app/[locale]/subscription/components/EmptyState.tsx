@@ -1,9 +1,13 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 /**
  * 无订阅状态组件
  */
 export default function EmptyState() {
+  const t = useTranslations('subscription.empty');
+
   return (
     <div className="bg-bg-elevated rounded-2xl p-12 border border-border text-center">
       <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-4">
@@ -16,13 +20,13 @@ export default function EmptyState() {
           />
         </svg>
       </div>
-      <h3 className="text-xl font-semibold text-white mb-2">暂无订阅</h3>
-      <p className="text-text-muted mb-6">您当前没有任何活跃的订阅</p>
+      <h3 className="text-xl font-semibold text-white mb-2">{t('title')}</h3>
+      <p className="text-text-muted mb-6">{t('description')}</p>
       <a
         href="/#pricing"
         className="inline-block px-6 py-3 rounded-lg gradient-bg text-white font-semibold hover:scale-105 transition-transform cursor-pointer"
       >
-        查看订阅方案
+        {t('action')}
       </a>
     </div>
   );

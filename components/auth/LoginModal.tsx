@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { signIn } from '@/lib/auth-client';
 import { useCachedSession } from '@/hooks/useCachedSession';
 
@@ -10,6 +11,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
+  const t = useTranslations('auth');
   const { data: session } = useCachedSession();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -75,10 +77,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           {/* 标题 */}
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-white mb-2">
-              欢迎回来
+              {t('modal.title')}
             </h2>
             <p className="text-sm text-text-muted">
-              登录以继续使用完整功能
+              {t('modal.subtitle')}
             </p>
           </div>
 
@@ -112,7 +114,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  <span>登录中...</span>
+                  <span>{t('loggingIn')}</span>
                 </>
               ) : (
                 <>
@@ -135,7 +137,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                       d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                     />
                   </svg>
-                  <span>使用 Google 登录</span>
+                  <span>{t('signInWithGoogle')}</span>
                 </>
               )}
             </button>
@@ -147,7 +149,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               </div>
               <div className="relative flex justify-center text-xs">
                 <span className="px-2 bg-bg-elevated text-text-muted">
-                  或
+                  {t('modal.or')}
                 </span>
               </div>
             </div>
@@ -170,20 +172,20 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                 />
               </svg>
-              <span>使用邮箱登录 (即将推出)</span>
+              <span>{t('signInWithEmail')}</span>
             </button>
           </div>
 
           {/* 底部提示 */}
           <div className="mt-6 text-center">
             <p className="text-xs text-text-muted">
-              登录即表示您同意我们的
+              {t('modal.terms')}
               <a href="/terms" className="text-primary hover:underline ml-1">
-                服务条款
+                {t('modal.termsOfService')}
               </a>
-              和
+              {t('modal.and')}
               <a href="/privacy" className="text-primary hover:underline ml-1">
-                隐私政策
+                {t('modal.privacyPolicy')}
               </a>
             </p>
           </div>

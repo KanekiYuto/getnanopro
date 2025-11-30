@@ -1,6 +1,10 @@
 {
   "title": "我的配額",
   "subtitle": "管理和查看您的可用配額",
+  "loginRequired": {
+    "title": "登入查看配額",
+    "description": "登入後即可查看您的配額使用情況和歷史記錄"
+  },
   "summary": {
     "title": "總可用額度",
     "credits": "點數"

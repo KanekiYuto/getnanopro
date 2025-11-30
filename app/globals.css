@@ -3,13 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Dark theme colors - Bright Purple style */
+/* Dark theme colors - Pink/Red style */
 @theme {
-  --color-primary: #6633FF;
-  --color-primary-hover: #5529cc;
-  --color-primary-light: #7d4dff;
-  --color-secondary: #8866ff;
-  --color-secondary-light: #aa99ff;
+  --color-primary: #dc2f5a;
+  --color-primary-hover: #b32647;
+  --color-primary-light: #e95575;
+  --color-secondary: #ff5c8a;
+  --color-secondary-light: #ff85a8;
   --color-bg: #121216;
   --color-bg-elevated: #161618;
   --color-bg-card: #27272A;
@@ -19,7 +19,7 @@
   --color-text-dim: #71717A;
   --color-border: #27272A;
   --color-border-light: #3F3F46;
-  --color-accent: #6633FF;
+  --color-accent: #dc2f5a;
   --color-success: #10B981;
   --color-warning: #F59E0B;
   --color-error: #EF4444;
@@ -38,11 +38,11 @@
   --color-text-dim: #71717A;
   --color-border: #27272A;
   --color-border-light: #3F3F46;
-  --color-primary: #6633FF;
-  --color-primary-hover: #5529cc;
-  --color-primary-light: #7d4dff;
-  --color-secondary: #8866ff;
-  --color-secondary-light: #aa99ff;
+  --color-primary: #dc2f5a;
+  --color-primary-hover: #b32647;
+  --color-primary-light: #e95575;
+  --color-secondary: #ff5c8a;
+  --color-secondary-light: #ff85a8;
   --radius: 0.625rem;
 
   /* shadcn/ui 暗色主题变量 */
@@ -52,7 +52,7 @@
   --card-foreground: #FAFAFA;
   --popover: #161618;
   --popover-foreground: #FAFAFA;
-  --primary: #6633FF;
+  --primary: #dc2f5a;
   --primary-foreground: #FAFAFA;
   --secondary: #27272A;
   --secondary-foreground: #FAFAFA;
@@ -64,9 +64,9 @@
   --destructive-foreground: #FAFAFA;
   --border: #27272A;
   --input: #27272A;
-  --ring: #6633FF;
-  --chart-1: #6633FF;
-  --chart-2: #8866ff;
+  --ring: #dc2f5a;
+  --chart-1: #dc2f5a;
+  --chart-2: #ff5c8a;
   --chart-3: #10B981;
   --chart-4: #F59E0B;
   --chart-5: #EF4444;
@@ -125,7 +125,7 @@ body {
 /* 渐变边框 - 彩色 */
 .gradient-border-colorful {
   border: 2px solid transparent;
-  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, #FF3466, #C721FF);
   background-origin: border-box;
   background-clip: padding-box, border-box;
 }
@@ -141,17 +141,17 @@ body {
 
 .gradient-border-focusable:focus,
 .gradient-border-focusable:focus-visible {
-  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background-image: linear-gradient(#161618, #161618), linear-gradient(144deg, #FF3466, #C721FF);
 }
 
 /* 渐变背景 - 彩色 */
 .gradient-bg {
-  background: linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background: linear-gradient(144deg, #FF3466, #C721FF);
 }
 
 /* 渐变文字 - 彩色 */
 .gradient-text {
-  background: linear-gradient(144deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background: linear-gradient(144deg, #FF3466, #C721FF);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
