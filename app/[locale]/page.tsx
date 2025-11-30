@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { siteConfig } from '@/config/site';
 import Divider from '@/components/Divider';
-import Pricing from '@/components/Pricing';
+import Pricing from '@/components/pricing';
 import PrismaticBurst from '@/components/PrismaticBurst';
 
 export default function Home() {

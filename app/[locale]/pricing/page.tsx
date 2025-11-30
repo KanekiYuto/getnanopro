@@ -1,4 +1,6 @@
-import Pricing from '@/components/Pricing';
+import Pricing from '@/components/pricing';
+import FAQ from '@/components/FAQ';
+import Divider from '@/components/Divider';
 import { getTranslations } from 'next-intl/server';
 
 export async function generateMetadata({
@@ -19,6 +21,10 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen">
       <Pricing />
+
+      <Divider />
+
+      <FAQ namespace="pricing" />
     </div>
   );
 }
