@@ -20,7 +20,7 @@
       "description": "Perfect for personal trial and light usage",
       "cta": "Get Started",
       "features": [
-        "20 image generations per month",
+        "{quota} credits per day",
         "Basic AI models",
         "Standard resolution (512x512)",
         "Community support",
@@ -32,7 +32,7 @@
       "description": "For individual users and small projects",
       "cta": "Subscribe Now",
       "features": [
-        "200 image generations per month",
+        "{quota} credits",
         "Standard AI models",
         "High resolution (1024x1024)",
         "Priority generation queue",
@@ -45,7 +45,7 @@
       "description": "For professional creators and team collaboration",
       "cta": "Subscribe Now",
       "features": [
-        "1000 image generations per month",
+        "{quota} credits",
         "All advanced AI models",
         "Ultra-high resolution (2048x2048)",
         "Highest priority queue",

@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useSession, signOut } from '@/lib/auth-client';
+import { useCachedSession, clearSessionCache } from '@/hooks/useCachedSession';
+import { signOut } from '@/lib/auth-client';
 import useModalStore from '@/store/useModalStore';
 import { LayoutDashboard, Settings, LogOut } from 'lucide-react';
 
@@ -10,7 +11,7 @@ interface UserButtonProps {
 }
 
 export default function UserButton({ fullWidth = false }: UserButtonProps) {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = useCachedSession();
   const { openLoginModal } = useModalStore();
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -34,6 +35,9 @@ export default function UserButton({ fullWidth = false }: UserButtonProps) {
 
   // 登出
   const handleSignOut = async () => {
+    // 清除 session 缓存
+    clearSessionCache();
+
     await signOut({
       fetchOptions: {
         onSuccess: () => {

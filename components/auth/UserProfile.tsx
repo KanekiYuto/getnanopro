@@ -1,10 +1,11 @@
 'use client';
 
-import { useSession, signOut } from '@/lib/auth-client';
+import { useCachedSession, clearSessionCache } from '@/hooks/useCachedSession';
+import { signOut } from '@/lib/auth-client';
 
 // 用户信息展示和退出登录组件
 export default function UserProfile() {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = useCachedSession();
 
   // 加载中状态
   if (isPending) {
@@ -23,6 +24,9 @@ export default function UserProfile() {
 
   const handleSignOut = async () => {
     try {
+      // 清除 session 缓存
+      clearSessionCache();
+
       await signOut({
         fetchOptions: {
           onSuccess: () => {

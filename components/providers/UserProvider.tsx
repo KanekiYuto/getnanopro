@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, startTransition } from 'react';
-import { useSession } from '@/lib/auth-client';
+import { useCachedSession } from '@/hooks/useCachedSession';
 import useUserStore from '@/store/useUserStore';
 import { USER_TYPE } from '@/config/constants';
 
@@ -10,7 +10,7 @@ interface UserProviderProps {
 }
 
 export default function UserProvider({ children }: UserProviderProps) {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = useCachedSession();
   const { setUser, setLoading, clearUser, setQuotaInfo, setQuotaLoading } = useUserStore();
 
   useEffect(() => {

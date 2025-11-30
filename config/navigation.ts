@@ -37,6 +37,7 @@ export const navigationGroups: NavGroup[] = [
       { name: 'home', href: '/', icon: 'home' },
       { name: 'dashboard', href: '/dashboard', icon: 'dashboard' },
       { name: 'quota', href: '/quota', icon: 'quota' },
+      { name: 'subscription', href: '/subscription', icon: 'subscription' },
       { name: 'pricing', href: '/pricing', icon: 'pricing' },
     ],
   },

@@ -19,6 +19,7 @@ const LOADING_ENABLED_PATHS: string[] = [
   '/settings',
   '/quota',
   '/ai-generator',
+  '/subscription',
 ];
 
 interface PageLayoutProps {

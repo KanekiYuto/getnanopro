@@ -66,6 +66,8 @@ export const quota = pgTable('quota', {
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
+  // 关联的交易ID (可选,免费配额时为空)
+  transactionId: uuid('transaction_id').references(() => transaction.id, { onDelete: 'cascade' }),
   // 配额类型: daily_free(免费配额-每日), monthly_basic(月度订阅-基础版), monthly_pro(月度订阅-专业版), yearly_basic(年度订阅-基础版), yearly_pro(年度订阅-专业版), quota_pack(配额包)
   type: text('type').notNull(),
   // 配额数量 (默认为 0)
@@ -98,6 +100,8 @@ export const subscription = pgTable('subscription', {
   paymentCustomerId: text('payment_customer_id'),
   // 订阅计划类型: monthly_basic, monthly_pro, yearly_basic, yearly_pro
   planType: text('plan_type').notNull(),
+  // 下次计划类型: 用于计划升级/降级,在下次续费时生效
+  nextPlanType: text('next_plan_type'),
   // 订阅状态: active(活跃), canceled(已取消), expired(已过期), pending(待支付)
   status: text('status').notNull().default('pending'),
   // 订阅金额(分/美分)
@@ -116,4 +120,26 @@ export const subscription = pgTable('subscription', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   // 更新时间
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
+});
+
+// 交易记录表
+export const transaction = pgTable('transaction', {
+  // UUID 主键,由数据库自动生成
+  id: uuid('id').primaryKey().defaultRandom(),
+  // 用户ID
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // 关联的订阅ID (可选,一次性支付时为空)
+  subscriptionId: uuid('subscription_id').references(() => subscription.id, { onDelete: 'cascade' }),
+  // 支付平台的交易ID
+  paymentTransactionId: text('payment_transaction_id').notNull(),
+  // 交易类型: subscription_payment(订阅支付), one_time_payment(一次性支付), refund(退款)
+  type: text('type').notNull(),
+  // 交易金额(分/美分)
+  amount: integer('amount').notNull(),
+  // 货币类型: USD, CNY 等
+  currency: text('currency').notNull().default('USD'),
+  // 创建时间
+  createdAt: timestamp('created_at').notNull().defaultNow(),
 });

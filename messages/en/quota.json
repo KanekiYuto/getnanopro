@@ -24,7 +24,8 @@
     "monthly_pro": "Monthly Pro",
     "yearly_basic": "Yearly Basic",
     "yearly_pro": "Yearly Pro",
-    "quota_pack": "Quota Pack"
+    "quota_pack": "Quota Pack",
+    "subscription_change_compensation": "Subscription Change Compensation"
   },
   "empty": {
     "active": "No active quota available",

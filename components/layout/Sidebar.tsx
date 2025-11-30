@@ -6,7 +6,8 @@ import useModalStore from '@/store/useModalStore';
 import { useTranslations } from 'next-intl';
 import { siteConfig } from '@/config/site';
 import { navigationGroups, type NavItem } from '@/config/navigation';
-import { useSession, signOut } from '@/lib/auth-client';
+import { useCachedSession, clearSessionCache } from '@/hooks/useCachedSession';
+import { signOut } from '@/lib/auth-client';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -25,6 +26,7 @@ import {
   LogOut,
   ChevronDown,
   X,
+  CreditCard,
 } from 'lucide-react';
 
 function classNames(...classes: string[]) {
@@ -37,6 +39,7 @@ function Icon({ name, className }: { name: string; className?: string }) {
     home: Home,
     dashboard: LayoutDashboard,
     quota: Zap,
+    subscription: CreditCard,
     pricing: Tag,
     chart: BarChart3,
     folder: Folder,
@@ -53,12 +56,15 @@ function Icon({ name, className }: { name: string; className?: string }) {
 
 // 用户区域组件
 function UserSection() {
-  const { data: session, isPending } = useSession();
+  const { data: session, isPending } = useCachedSession();
   const { openLoginModal } = useModalStore();
   const [showMenu, setShowMenu] = useState(false);
 
   const handleSignOut = async () => {
     try {
+      // 清除 session 缓存
+      clearSessionCache();
+
       await signOut({
         fetchOptions: {
           onSuccess: () => {

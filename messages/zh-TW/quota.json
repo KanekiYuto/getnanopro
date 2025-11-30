@@ -24,7 +24,8 @@
     "monthly_pro": "月度專業版",
     "yearly_basic": "年度基礎版",
     "yearly_pro": "年度專業版",
-    "quota_pack": "配額包"
+    "quota_pack": "配額包",
+    "subscription_change_compensation": "訂閱變更補償"
   },
   "empty": {
     "active": "暫無有效配額",

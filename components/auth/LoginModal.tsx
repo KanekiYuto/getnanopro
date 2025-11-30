@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { signIn } from '@/lib/auth-client';
-import { useSession } from '@/lib/auth-client';
+import { useCachedSession } from '@/hooks/useCachedSession';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -10,7 +10,7 @@ interface LoginModalProps {
 }
 
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
-  const { data: session } = useSession();
+  const { data: session } = useCachedSession();
   const [isLoading, setIsLoading] = useState(false);
 
   // 如果用户已登录,自动关闭模态框
