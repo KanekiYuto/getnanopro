@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import GeneratorLayout from '../base/GeneratorLayout';
 import ExamplePreview, { ExampleItem } from '../base/ExampleGallery';
-import MediaGallery, { MediaItem } from '../base/MediaGallery';
+import MediaGallery, { MediaItem, TaskInfo } from '../base/MediaGallery';
 import CreditsCard from '../base/CreditsCard';
 import AdvancedSettings from '../base/AdvancedSettings';
 import FormSelect from '../form/FormSelect';
@@ -25,6 +25,7 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedImages, setGeneratedImages] = useState<MediaItem[]>([]);
+  const [taskInfo, setTaskInfo] = useState<TaskInfo | undefined>(undefined);
 
   // 宽高比选项
   const aspectRatios = [
@@ -58,7 +59,7 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
   };
 
   // 生成图像
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!prompt.trim()) {
       alert('请输入提示词');
       return;
@@ -68,30 +69,82 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
     setProgress(0);
     setGeneratedImages([]);
 
-    // TODO: 调用实际的 API 接口
-    // 当前为模拟实现
-    const testImageUrl = '/test/3c3bb2c9-f19e-4f48-b005-c27e475d6bf5.webp';
-
-    // 模拟进度更新
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setIsLoading(false);
-
-          // 生成结果
-          const imageName = testImageUrl.split('/').pop()?.split('.')[0] || 'image';
-          setGeneratedImages([{
-            id: `${Date.now()}`,
-            url: testImageUrl,
-            type: 'image',
-            filename: `${imageName}.webp`,
-          }]);
-          return 100;
-        }
-        return prev + 10;
+    try {
+      // 调用文生图 API
+      const response = await fetch('/api/ai-generator/provider/wavespeed/nano-banana-pro/text-to-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          aspect_ratio: aspectRatio,
+          seed: seed || undefined,
+        }),
       });
-    }, 300);
+
+      const result = await response.json();
+
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to generate image');
+      }
+
+      const taskId = result.data.task_id;
+
+      // 轮询查询任务状态
+      const pollStatus = async () => {
+        try {
+          const statusResponse = await fetch(`/api/ai-generator/status/${taskId}`);
+          const statusResult = await statusResponse.json();
+
+          if (!statusResult.success) {
+            throw new Error(statusResult.error || 'Failed to query status');
+          }
+
+          const { status, progress: taskProgress, results, error } = statusResult.data;
+
+          // 更新进度
+          if (taskProgress !== undefined) {
+            setProgress(taskProgress);
+          }
+
+          if (status === 'completed' && results) {
+            // 任务完成
+            setIsLoading(false);
+            setProgress(100);
+            setGeneratedImages(results.map((item: any, index: number) => ({
+              id: `${Date.now()}-${index}`,
+              url: item.url,
+              type: 'image',
+            })));
+
+            // 保存任务信息
+            setTaskInfo({
+              prompt,
+              created_at: statusResult.data.created_at,
+              completed_at: statusResult.data.completed_at,
+            });
+          } else if (status === 'failed') {
+            // 任务失败
+            throw new Error(error?.message || 'Generation failed');
+          } else {
+            // 继续轮询
+            setTimeout(pollStatus, 2000);
+          }
+        } catch (err) {
+          console.error('Polling error:', err);
+          setIsLoading(false);
+          alert(err instanceof Error ? err.message : 'Failed to check status');
+        }
+      };
+
+      // 开始轮询
+      pollStatus();
+    } catch (error) {
+      console.error('Generation error:', error);
+      setIsLoading(false);
+      alert(error instanceof Error ? error.message : 'Failed to generate image');
+    }
   };
 
 
@@ -144,38 +197,13 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
     </div>
   );
 
-  // 下载单个文件
-  const handleDownload = (item: MediaItem) => {
-    const link = document.createElement('a');
-    link.href = item.url;
-    link.download = item.filename || `download-${item.id}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // 下载全部文件
-  const handleDownloadAll = () => {
-    generatedImages.forEach(handleDownload);
-  };
-
-  // 清空结果
-  const handleClear = () => {
-    setGeneratedImages([]);
-    setProgress(0);
-  };
-
   // 预览内容
   const previewContent = (
     <>
-      {generatedImages.length > 0 ? (
+      {generatedImages.length > 0 && taskInfo ? (
         <MediaGallery
           items={generatedImages}
-          onDownload={handleDownload}
-          onDownloadAll={handleDownloadAll}
-          onClear={handleClear}
-          title="生成结果"
-          columns={1}
+          taskInfo={taskInfo}
         />
       ) : (
         <ExamplePreview

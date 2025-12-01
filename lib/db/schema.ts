@@ -148,6 +148,8 @@ export const transaction = pgTable('transaction', {
 export const mediaGenerationTask = pgTable('media_generation_task', {
   // UUID 主键,由数据库自动生成
   id: uuid('id').primaryKey().defaultRandom(),
+  // 任务ID (UUID格式,用于前端查询和 webhook 回调)
+  taskId: uuid('task_id').notNull().unique(),
   // 用户ID
   userId: text('user_id')
     .notNull()
@@ -156,6 +158,8 @@ export const mediaGenerationTask = pgTable('media_generation_task', {
   taskType: text('task_type').notNull(),
   // 服务商: fal, wavespeed, replicate 等
   provider: text('provider').notNull(),
+  // 服务商平台的请求ID (可选)
+  providerRequestId: text('provider_request_id'),
   // 使用的模型: nano_banana_pro, flux_schnell, flux_dev 等
   model: text('model').notNull(),
   // 任务状态: pending(排队中), processing(生成中), completed(已完成), failed(失败), canceled(已取消)
