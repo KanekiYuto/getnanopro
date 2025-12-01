@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import LoadingAnimation from './LoadingAnimation';
 
 interface GeneratorLayoutProps {
   // 头部模型选择器
@@ -49,20 +50,12 @@ export default function GeneratorLayout({
         {/* 右侧 - 预览区域 */}
         <div className="relative">
           <div className="rounded-xl p-6 overflow-hidden gradient-border">
-            {/* 加载遮罩 */}
-            {isLoading && (
-              <div className="absolute inset-0 bg-bg-elevated/90 backdrop-blur-sm z-10 flex items-center justify-center rounded-xl">
-                <div className="text-center">
-                  <div className="inline-block w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mb-4" />
-                  <p className="text-text-muted">生成中... {progress}%</p>
-                </div>
-              </div>
+            {/* 根据加载状态显示不同内容 */}
+            {isLoading ? (
+              <LoadingAnimation progress={progress} />
+            ) : (
+              previewContent
             )}
-
-            {/* 预览内容 */}
-            <div>
-              {previewContent}
-            </div>
           </div>
         </div>
       </div>

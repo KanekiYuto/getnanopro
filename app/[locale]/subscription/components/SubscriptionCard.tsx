@@ -84,15 +84,15 @@ export default function SubscriptionCard({ subscription }: SubscriptionCardProps
           </div>
           {/* 显示计划变更信息 */}
           {subscription.nextPlanType && subscription.nextPlanType !== subscription.planType && (
-            <div className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#C721FF]/15 to-[#FF3466]/15 border border-[#C721FF]/30 backdrop-blur-sm">
-              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-[#FF3466]/20">
-                <svg className="w-3 h-3 text-[#FF3466]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="mt-3 flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-[#FF3466]/15 to-[#C721FF]/15 border border-white/30 backdrop-blur-sm">
+              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-white/20">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </div>
               <div className="flex items-baseline gap-1.5">
-                <span className="text-xs text-[#FF3466]/80 font-medium">{t('nextRenewal')}</span>
-                <span className="text-sm text-white font-semibold">{getPlanTypeText(subscription.nextPlanType)}</span>
+                <span className="text-xs text-white/80 font-medium">{t('nextRenewal')}</span>
+                <span className="text-sm font-bold gradient-text">{getPlanTypeText(subscription.nextPlanType)}</span>
               </div>
             </div>
           )}

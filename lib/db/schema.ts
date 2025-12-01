@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, boolean, integer, uuid, jsonb } from 'drizzle-orm/pg-core';
 
 // Better Auth 用户表
 export const user = pgTable('user', {
@@ -140,6 +140,74 @@ export const transaction = pgTable('transaction', {
   amount: integer('amount').notNull(),
   // 货币类型: USD, CNY 等
   currency: text('currency').notNull().default('USD'),
+  // 创建时间
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
+// 媒体生成任务表
+export const mediaGenerationTask = pgTable('media_generation_task', {
+  // UUID 主键,由数据库自动生成
+  id: uuid('id').primaryKey().defaultRandom(),
+  // 用户ID
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // 任务类型: text_to_image(文生图), image_to_image(图生图)
+  taskType: text('task_type').notNull(),
+  // 服务商: fal, wavespeed, replicate 等
+  provider: text('provider').notNull(),
+  // 使用的模型: nano_banana_pro, flux_schnell, flux_dev 等
+  model: text('model').notNull(),
+  // 任务状态: pending(排队中), processing(生成中), completed(已完成), failed(失败), canceled(已取消)
+  status: text('status').notNull().default('pending'),
+  // 进度百分比 (0-100)
+  progress: integer('progress').notNull().default(0),
+  // 生成参数 (JSON 格式存储: prompt、negativePrompt、aspectRatio、numImages、seed、steps、guidanceScale 等)
+  parameters: jsonb('parameters').notNull(),
+  // 生成结果 (JSONB 格式存储媒体文件信息数组: [{url, filename, type, size}])
+  results: jsonb('results'),
+  // 消费的配额交易记录ID
+  consumeTransactionId: uuid('consume_transaction_id')
+    .notNull()
+    .references(() => quotaTransaction.id, { onDelete: 'cascade' }),
+  // 退款的配额交易记录ID (可选)
+  refundTransactionId: uuid('refund_transaction_id').references(() => quotaTransaction.id, { onDelete: 'set null' }),
+  // 错误信息 (JSONB 格式存储错误详情: {message, code, stack, details})
+  errorMessage: jsonb('error_message'),
+  // 任务开始时间
+  startedAt: timestamp('started_at').notNull(),
+  // 任务完成时间
+  completedAt: timestamp('completed_at'),
+  // 创建时间
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  // 更新时间
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  // 删除时间 (软删除标记)
+  deletedAt: timestamp('deleted_at'),
+});
+
+// 配额交易记录表
+export const quotaTransaction = pgTable('quota_transaction', {
+  // UUID 主键,由数据库自动生成
+  id: uuid('id').primaryKey().defaultRandom(),
+  // 用户ID
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  // 关联的配额ID
+  quotaId: uuid('quota_id')
+    .notNull()
+    .references(() => quota.id, { onDelete: 'cascade' }),
+  // 交易类型: consume(消费), refund(退款)
+  type: text('type').notNull(),
+  // 变更数量 (正数为增加,负数为减少)
+  amount: integer('amount').notNull(),
+  // 交易前余额
+  balanceBefore: integer('balance_before').notNull(),
+  // 交易后余额
+  balanceAfter: integer('balance_after').notNull(),
+  // 备注说明
+  note: text('note'),
   // 创建时间
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
