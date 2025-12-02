@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { checkAndIssueDailyQuota } from '@/lib/quota';
+import { checkAndIssueDailyQuota } from '@/lib/quota/daily-quota';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
 
