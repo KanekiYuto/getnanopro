@@ -17,7 +17,7 @@ export default function Pricing() {
   const billingCycle: BillingCycle = isYearly ? 'yearly' : 'monthly';
   const uniquePlanTypes = useMemo(() => getUniquePlanTypes(), []);
 
-  const { currentSubscription, fetchCurrentSubscription } = useCurrentSubscription(user);
+  const { currentSubscription, isLoading, fetchCurrentSubscription } = useCurrentSubscription(user);
 
   return (
     <section className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 overflow-hidden">
@@ -70,7 +70,7 @@ export default function Pricing() {
                 status={status}
                 isYearly={isYearly}
                 t={t}
-                renderCTAButton={() => renderCTAButton(status, currentTier, translation, t, user, fetchCurrentSubscription)}
+                renderCTAButton={() => renderCTAButton(status, currentTier, translation, t, user, fetchCurrentSubscription, isLoading)}
               />
             );
           })}

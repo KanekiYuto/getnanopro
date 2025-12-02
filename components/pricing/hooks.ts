@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { Subscription, SubscriptionStatus, TierTranslation } from './types';
 import type { PricingTier, PlanType } from '@/config/pricing';
 import { quotaConfig } from '@/lib/quota/config';
@@ -7,28 +7,73 @@ import { SUBSCRIPTION_QUOTA_CONFIG } from '@/config/subscription';
 // 获取用户当前订阅
 export function useCurrentSubscription(user: any) {
   const [currentSubscription, setCurrentSubscription] = useState<Subscription | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const hasInitialized = useRef(false);
 
+  useEffect(() => {
+    // 如果没有用户且已经初始化过，直接返回
+    if (!user) {
+      if (hasInitialized.current) {
+        return;
+      }
+      hasInitialized.current = true;
+      return;
+    }
+
+    let cancelled = false;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch('/api/subscription/current');
+        const result = await response.json();
+        if (!cancelled) {
+          if (result.success && result.data) {
+            setCurrentSubscription(result.data);
+          } else {
+            setCurrentSubscription(null);
+          }
+          setIsLoading(false);
+          hasInitialized.current = true;
+        }
+      } catch (error) {
+        if (!cancelled) {
+          console.error('Failed to fetch subscription:', error);
+          setCurrentSubscription(null);
+          setIsLoading(false);
+          hasInitialized.current = true;
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  // 手动刷新订阅信息的函数
   const fetchCurrentSubscription = useCallback(async () => {
     if (!user) return;
 
+    setIsLoading(true);
     try {
       const response = await fetch('/api/subscription/current');
       const result = await response.json();
       if (result.success && result.data) {
         setCurrentSubscription(result.data);
+      } else {
+        setCurrentSubscription(null);
       }
     } catch (error) {
       console.error('Failed to fetch subscription:', error);
+      setCurrentSubscription(null);
+    } finally {
+      setIsLoading(false);
     }
   }, [user]);
 
-  useEffect(() => {
-    // 初始数据获取，不会导致级联渲染
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    fetchCurrentSubscription();
-  }, [fetchCurrentSubscription]);
-
-  return { currentSubscription, fetchCurrentSubscription };
+  return { currentSubscription, isLoading, fetchCurrentSubscription };
 }
 
 // 获取订阅状态

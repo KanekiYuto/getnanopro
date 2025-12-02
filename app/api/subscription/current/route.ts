@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { subscription } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 /**
  * 获取用户当前的订阅信息
@@ -24,11 +24,16 @@ export async function GET(request: NextRequest) {
 
     const userId = session.user.id;
 
-    // 查询用户的当前订阅
+    // 查询用户的当前激活订阅
     const [currentSubscription] = await db
       .select()
       .from(subscription)
-      .where(eq(subscription.userId, userId))
+      .where(
+        and(
+          eq(subscription.userId, userId),
+          eq(subscription.status, 'active')
+        )
+      )
       .orderBy(subscription.createdAt)
       .limit(1);
 

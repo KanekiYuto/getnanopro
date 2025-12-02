@@ -175,12 +175,28 @@ export function renderCTAButton(
   translation: TierTranslation,
   t: any,
   user: any,
-  fetchCurrentSubscription: () => void
+  fetchCurrentSubscription: () => void,
+  isLoading: boolean = false
 ): React.ReactNode {
   const baseClassName = "group/btn w-full h-11 sm:h-12 rounded-lg sm:rounded-xl text-sm sm:text-base font-semibold transition-all duration-300 mb-6 sm:mb-8 relative overflow-hidden";
   const activeClassName = tier.highlighted
     ? 'gradient-bg text-white hover:scale-[1.02] active:scale-95'
     : 'gradient-border text-text hover:text-white hover:gradient-bg active:scale-95';
+
+  // 如果正在加载订阅信息，显示加载状态
+  if (isLoading) {
+    return (
+      <button disabled className={`${baseClassName} cursor-not-allowed opacity-50 gradient-border text-text`}>
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+          </svg>
+          {t('status.loading')}
+        </span>
+      </button>
+    );
+  }
 
   // 免费方案或未配置
   if (status === 'free' || status === 'configuring') {

@@ -12,7 +12,8 @@
     "scheduled": "Scheduled",
     "upgrade": "Upgrade",
     "downgrade": "Downgrade",
-    "configuring": "Configuring..."
+    "configuring": "Configuring...",
+    "loading": "Loading..."
   },
   "billing": {
     "monthly": "Monthly",

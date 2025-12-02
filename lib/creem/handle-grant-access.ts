@@ -36,19 +36,4 @@ export async function handleGrantAccess(data: any) {
     console.error('✗ Grant access: Missing required data', { userId, productId: product.id, planInfo });
     return;
   }
-
-  try {
-    await db
-      .update(user)
-      .set({
-        userType: planInfo.planType,
-        updatedAt: new Date(),
-      })
-      .where(eq(user.id, userId));
-
-    console.log(`✓ Granted access to user ${userId} (${customer?.email}) - Plan: ${planInfo.planType}`);
-  } catch (error) {
-    console.error('✗ Grant access handler error:', error);
-    throw error;
-  }
 }

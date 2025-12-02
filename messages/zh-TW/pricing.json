@@ -12,7 +12,8 @@
     "scheduled": "下期生效",
     "upgrade": "升級訂閱",
     "downgrade": "降級訂閱",
-    "configuring": "產品設定中..."
+    "configuring": "產品設定中...",
+    "loading": "載入中..."
   },
   "billing": {
     "monthly": "按月付費",

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import { subscription } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 /**
  * 升级订阅 API
@@ -38,11 +38,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 查询用户的当前订阅
+    // 查询用户的当前激活订阅
     const [currentSubscription] = await db
       .select()
       .from(subscription)
-      .where(eq(subscription.userId, userId))
+      .where(
+        and(
+          eq(subscription.userId, userId),
+          eq(subscription.status, 'active')
+        )
+      )
       .orderBy(subscription.createdAt)
       .limit(1);
 
@@ -50,14 +55,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'No active subscription found' },
         { status: 404 }
-      );
-    }
-
-    // 检查订阅是否为活跃状态
-    if (currentSubscription.status !== 'active') {
-      return NextResponse.json(
-        { success: false, error: 'Subscription is not active' },
-        { status: 400 }
       );
     }
 
