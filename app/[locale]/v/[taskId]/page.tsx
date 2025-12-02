@@ -52,7 +52,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export default async function SharePage({ params }: PageProps) {
-  const { taskId: shareId } = await params;
+  const { locale, taskId: shareId } = await params;
+  const t = await getTranslations({ locale, namespace: 'share.details' });
   const task = await fetchTaskData(shareId);
 
   // 任务不存在，返回 404
@@ -101,23 +102,23 @@ export default async function SharePage({ params }: PageProps) {
 
           {/* 主内容区域：图片和信息左右布局 */}
           <section className="bg-surface-secondary rounded-2xl p-4 border border-border/50 mb-8">
-            <h2 className="sr-only">{model} AI 图片生成结果展示</h2>
+            <h2 className="sr-only">{model} {t('generationResults')}</h2>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               {/* 左侧：图片轮播 */}
               <div className="lg:col-span-2">
-                <h3 className="sr-only">AI 生成的高清图片预览</h3>
+                <h3 className="sr-only">{t('imagePreview')}</h3>
                 <ImageCarousel images={task.results} prompt={prompt} />
               </div>
 
               {/* 右侧：信息区域 */}
               <aside className="lg:col-span-1 flex flex-col justify-between gap-4">
                 <div>
-                  <h3 className="sr-only">图片生成参数与模型信息</h3>
+                  <h3 className="sr-only">{t('parametersInfo')}</h3>
                   {/* 详细信息网格 */}
                   <div className="grid grid-cols-2 gap-3">
-                    <InfoCard label="AI 模型" value={model} fullWidth />
-                    {resolution && <InfoCard label="分辨率" value={resolution.toUpperCase()} />}
-                    {aspectRatio && <InfoCard label="宽高比" value={aspectRatio} />}
+                    <InfoCard label={t('aiModel')} value={model} fullWidth />
+                    {resolution && <InfoCard label={t('resolution')} value={resolution.toUpperCase()} />}
+                    {aspectRatio && <InfoCard label={t('aspectRatio')} value={aspectRatio} />}
                     <PromptCard prompt={prompt} />
                   </div>
                 </div>
@@ -126,6 +127,7 @@ export default async function SharePage({ params }: PageProps) {
                 <ActionButtons
                   shareUrl={`${siteUrl}/v/${task.share_id}`}
                   prompt={prompt}
+                  imageUrl={task.results?.[0]?.url}
                 />
               </aside>
             </div>

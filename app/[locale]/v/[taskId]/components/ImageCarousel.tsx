@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ImageCarouselProps {
   images: Array<{
@@ -11,6 +12,7 @@ interface ImageCarouselProps {
 }
 
 export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
+  const t = useTranslations('share.details');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goToPrevious = useCallback(() => {
@@ -56,7 +58,7 @@ export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images[currentIndex].url}
-          alt={`${prompt} - 图片 ${currentIndex + 1}`}
+          alt={`${prompt} - ${t('imageAlt')} ${currentIndex + 1}`}
           className="w-full h-full object-contain"
           loading="eager"
         />
@@ -75,7 +77,7 @@ export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
             <button
               onClick={goToPrevious}
               className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 backdrop-blur-sm hover:bg-black/90 text-white transition-all flex items-center justify-center group cursor-pointer"
-              aria-label="上一张图片"
+              aria-label={t('previousImage')}
             >
               <svg
                 className="w-6 h-6 group-hover:scale-110 transition-transform"
@@ -91,7 +93,7 @@ export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
             <button
               onClick={goToNext}
               className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/70 backdrop-blur-sm hover:bg-black/90 text-white transition-all flex items-center justify-center group cursor-pointer"
-              aria-label="下一张图片"
+              aria-label={t('nextImage')}
             >
               <svg
                 className="w-6 h-6 group-hover:scale-110 transition-transform"
