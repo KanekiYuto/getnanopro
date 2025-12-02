@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { getRequiredCredits, DEFAULT_CREDITS, type TaskType } from '@/config/ai-generator';
+import { useMemo } from 'react';
+import { getRequiredCredits, type TaskType } from '@/config/ai-generator';
 
 /**
  * 配额消耗计算 Hook
@@ -13,12 +13,10 @@ export function useRequiredCredits(
   model: string,
   parameters: Record<string, any>
 ): number {
-  const [requiredCredits, setRequiredCredits] = useState<number>(DEFAULT_CREDITS);
-
-  useEffect(() => {
-    const credits = getRequiredCredits(taskType, model, parameters);
-    setRequiredCredits(credits);
-  }, [taskType, model, JSON.stringify(parameters)]);
+  // 使用 useMemo 计算配额，避免在 effect 中同步调用 setState
+  const requiredCredits = useMemo(() => {
+    return getRequiredCredits(taskType, model, parameters);
+  }, [taskType, model, parameters]);
 
   return requiredCredits;
 }

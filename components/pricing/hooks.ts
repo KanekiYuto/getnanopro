@@ -23,6 +23,8 @@ export function useCurrentSubscription(user: any) {
   }, [user]);
 
   useEffect(() => {
+    // 初始数据获取，不会导致级联渲染
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchCurrentSubscription();
   }, [fetchCurrentSubscription]);
 
