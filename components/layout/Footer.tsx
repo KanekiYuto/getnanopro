@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { siteConfig } from '@/config/site';
 import { footerSections } from '@/config/navigation';
 
@@ -15,12 +16,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* 品牌区域 - 移动端占1列，平板占2列，桌面占1列 */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <a
+            <Link
               href="/"
               className="inline-block text-2xl font-bold text-white hover:opacity-80 transition-opacity mb-4"
             >
               {siteConfig.name}
-            </a>
+            </Link>
             <p className="text-text-muted text-sm leading-relaxed max-w-md">
               {t('seo.description')}
             </p>

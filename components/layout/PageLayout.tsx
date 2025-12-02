@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { usePathname } from '@/i18n/routing';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -50,27 +50,36 @@ export default function PageLayout({ children }: PageLayoutProps) {
     pathname.startsWith(path)
   );
 
-  // 路由变化时显示 loading,并记录开始时间
+  // 路由变化时显示 loading 并在内容加载后隐藏
   useEffect(() => {
-    if (isLoadingEnabled) {
-      setIsLoading(true);
-      setStartTime(Date.now());
+    if (!isLoadingEnabled) {
+      return;
     }
-  }, [pathname, isLoadingEnabled]);
 
-  // 监听 children 变化,确保 loading 至少显示 500ms
-  useEffect(() => {
-    if (isLoading && isLoadingEnabled) {
-      const elapsed = Date.now() - startTime;
+    // 使用 startTransition 包裹状态更新
+    const loadStartTime = Date.now();
+    startTransition(() => {
+      setIsLoading(true);
+      setStartTime(loadStartTime);
+    });
+
+    // 等待下一帧后检查内容是否已加载
+    const timeoutId = setTimeout(() => {
+      const elapsed = Date.now() - loadStartTime;
       const remaining = Math.max(0, 500 - elapsed);
 
-      const timer = setTimeout(() => {
-        setIsLoading(false);
+      // 确保 loading 至少显示 500ms
+      setTimeout(() => {
+        startTransition(() => {
+          setIsLoading(false);
+        });
       }, remaining);
+    }, 0);
 
-      return () => clearTimeout(timer);
-    }
-  }, [children, isLoading, isLoadingEnabled, startTime]);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [pathname, isLoadingEnabled, children]);
 
   if (shouldHideLayout) {
     return <>{children}</>;

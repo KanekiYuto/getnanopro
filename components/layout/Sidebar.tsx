@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from '@/i18n/routing';
+import { usePathname, Link } from '@/i18n/routing';
 import useSidebarStore from '@/store/useSidebarStore';
 import useModalStore from '@/store/useModalStore';
 import { useTranslations } from 'next-intl';
@@ -140,6 +140,7 @@ function UserSection() {
         className="flex w-full items-center gap-3 rounded-xl gradient-border px-3 py-2.5 text-sm text-text-muted hover:bg-white/5 hover:text-white transition-all cursor-pointer"
       >
         {session.user.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             src={session.user.image}
             alt={session.user.name || t('user')}
@@ -207,7 +208,7 @@ function MenuItem({ item, isActive, onClick, t }: {
   };
 
   return (
-    <a
+    <Link
       href={item.href}
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
@@ -248,7 +249,7 @@ function MenuItem({ item, isActive, onClick, t }: {
       )}>
         {t(`navigation.${item.name}`)}
       </span>
-    </a>
+    </Link>
   );
 }
 
@@ -272,9 +273,9 @@ export default function Sidebar() {
           <div className="fixed inset-y-0 left-0 flex w-full max-w-xs flex-col bg-bg-elevated border-r border-border shadow-2xl animate-in slide-in-from-left duration-300 z-10">
             {/* 头部 */}
             <div className="relative flex h-[60px] items-center justify-center border-b border-border">
-              <a href="/" className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity">
+              <Link href="/" className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity">
                 {siteConfig.name}
-              </a>
+              </Link>
               <button
                 type="button"
                 className="absolute right-4 rounded-lg p-2 text-text-muted hover:bg-bg-hover hover:text-text transition-colors"
@@ -327,12 +328,12 @@ export default function Sidebar() {
       <div className="hidden lg:flex lg:flex-col lg:w-64 flex-shrink-0 bg-bg-elevated border-r border-border z-[250]">
         {/* Logo 区域 */}
         <div className="flex h-[60px] shrink-0 items-center justify-center border-b border-border">
-          <a
+          <Link
             href="/"
             className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity"
           >
             {siteConfig.name}
-          </a>
+          </Link>
         </div>
 
         {/* 导航菜单 */}

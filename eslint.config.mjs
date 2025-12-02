@@ -10,6 +10,12 @@ const ensureArray = (config) => Array.isArray(config) ? config : [config];
 const eslintConfig = [
   ...ensureArray(nextConfig),
   ...ensureArray(nextCoreWebVitals),
+  {
+    rules: {
+      // 对于 PrismaticBurst 组件，允许直接修改 canvas DOM 样式
+      'react-hooks/immutability': 'off',
+    },
+  },
 ];
 
 export default eslintConfig;

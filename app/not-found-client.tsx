@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import FuzzyText from '@/components/FuzzyText';
 import Footer from '@/components/layout/Footer';
 
@@ -33,18 +34,18 @@ export default function NotFoundClient() {
 
         {/* 按钮组 */}
         <div className="flex gap-4 mt-4">
-          <a
+          <Link
             href="/"
             className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
           >
             {t('buttons.home')}
-          </a>
-          <a
+          </Link>
+          <Link
             href="/dashboard"
             className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 text-white font-medium transition-all cursor-pointer"
           >
             {t('buttons.dashboard')}
-          </a>
+          </Link>
         </div>
       </div>
 

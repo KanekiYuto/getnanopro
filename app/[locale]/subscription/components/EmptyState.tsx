@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 /**
  * 无订阅状态组件
@@ -22,12 +23,12 @@ export default function EmptyState() {
       </div>
       <h3 className="text-xl font-semibold text-white mb-2">{t('title')}</h3>
       <p className="text-text-muted mb-6">{t('description')}</p>
-      <a
+      <Link
         href="/#pricing"
         className="inline-block px-6 py-3 rounded-lg gradient-bg text-white font-semibold hover:scale-105 transition-transform cursor-pointer"
       >
         {t('action')}
-      </a>
+      </Link>
     </div>
   );
 }

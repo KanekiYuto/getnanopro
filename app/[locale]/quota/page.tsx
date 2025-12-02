@@ -88,7 +88,6 @@ export default function QuotaPage() {
       fetchActiveQuotas();
     } else if (activeTab === 'expired' && expiredQuotas === null) {
       // 按需数据获取，不会导致级联渲染
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchExpiredQuotas();
     }
   }, [activeTab, activeQuotas, expiredQuotas, user, fetchActiveQuotas, fetchExpiredQuotas]);

@@ -395,8 +395,12 @@ const PrismaticBurst = ({
       meshRef.current = null;
       triRef.current = null;
     };
+    // mixBlendMode 在单独的 useEffect 中处理（见下方）
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 直接修改 canvas DOM 样式，不通过 React 渲染
+  // rendererRef 是一个 ref，不需要作为依赖
   useEffect(() => {
     const canvas = rendererRef.current?.gl?.canvas as HTMLCanvasElement | undefined;
     if (canvas) {

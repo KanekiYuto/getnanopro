@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 interface ImageCarouselProps {
   images: Array<{
@@ -13,21 +13,21 @@ interface ImageCarouselProps {
 export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
-  };
+  }, [images.length]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
-  };
+  }, [images.length]);
 
-  const goToIndex = (index: number) => {
+  const goToIndex = useCallback((index: number) => {
     setCurrentIndex(index);
-  };
+  }, []);
 
   // 键盘事件监听
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [images.length]);
+  }, [images.length, goToPrevious, goToNext]);
 
   if (images.length === 0) {
     return null;
@@ -53,6 +53,7 @@ export default function ImageCarousel({ images, prompt }: ImageCarouselProps) {
     <div className="relative bg-surface-secondary rounded-2xl overflow-hidden border border-border/50">
       {/* 主图片区域 */}
       <div className="relative w-full aspect-square bg-muted">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={images[currentIndex].url}
           alt={`${prompt} - 图片 ${currentIndex + 1}`}

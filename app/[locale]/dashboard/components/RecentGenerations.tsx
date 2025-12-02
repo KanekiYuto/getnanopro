@@ -135,6 +135,7 @@ export default function RecentGenerations() {
                     {/* 任务状态 */}
                     {task.status === 'completed' && task.results && task.results.length > 0 ? (
                       <div className="relative aspect-square overflow-hidden rounded-lg">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={task.results[0].url}
                           alt={task.parameters.prompt}

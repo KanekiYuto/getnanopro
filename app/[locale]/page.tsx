@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { siteConfig } from '@/config/site';
 import Divider from '@/components/Divider';
 import Pricing from '@/components/pricing';
@@ -82,18 +83,18 @@ export default function Home() {
 
             {/* CTA 按钮 */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <a
+              <Link
                 className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
                 href="/dashboard"
               >
                 <span>{t('hero.buttons.startCreate')}</span>
-              </a>
-              <a
+              </Link>
+              <Link
                 className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium transition-all cursor-pointer"
                 href="/projects"
               >
                 <span>{t('hero.buttons.viewExamples')}</span>
-              </a>
+              </Link>
             </div>
 
             {/* 特性标签 */}
@@ -204,18 +205,18 @@ export default function Home() {
 
               {/* 按钮组 */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <a
+                <Link
                   href="/dashboard"
                   className="flex h-12 items-center justify-center px-8 rounded-full bg-white hover:bg-gray-100 text-gray-900 font-medium transition-all cursor-pointer"
                 >
                   <span>{t('cta.buttons.freeTrial')}</span>
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/projects"
                   className="flex h-12 items-center justify-center px-8 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium transition-all cursor-pointer"
                 >
                   <span>{t('cta.buttons.viewExamples')}</span>
-                </a>
+                </Link>
               </div>
 
               {/* 底部提示 */}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import useUserStore from '@/store/useUserStore';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
@@ -105,10 +106,10 @@ export default function SettingsPage() {
                 <p className="text-sm text-text-muted mt-1 capitalize">{user.userType}</p>
               </div>
               <Button asChild className="gradient-bg border-0 hover:brightness-110">
-                <a href="/pricing" className="inline-flex items-center gap-2">
+                <Link href="/pricing" className="inline-flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   {t('actions.upgrade')}
-                </a>
+                </Link>
               </Button>
             </div>
           </div>

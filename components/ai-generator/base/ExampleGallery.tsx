@@ -84,6 +84,7 @@ export default function ExamplePreview({
             onClick={() => onSelectExample?.(currentExample)}
           >
             <div className="relative w-full h-full bg-bg-elevated">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={currentExample.thumbnail}
                 alt={currentExample.prompt}

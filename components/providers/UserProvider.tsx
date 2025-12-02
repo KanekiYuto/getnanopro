@@ -99,7 +99,7 @@ export default function UserProvider({ children }: UserProviderProps) {
         clearUser();
       });
     }
-  }, [session, isPending, setUser, setLoading, clearUser]);
+  }, [session, isPending, setUser, setLoading, clearUser, setQuotaInfo, setQuotaLoading]);
 
   return <>{children}</>;
 }

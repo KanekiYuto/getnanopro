@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import useSidebarStore from '@/store/useSidebarStore';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import UserButton from '@/components/auth/UserButton';
 import { siteConfig } from '@/config/site';
 import { headerNavigation } from '@/config/navigation';
@@ -35,14 +36,14 @@ export default function Header() {
 
             {/* 中间: Logo - 仅在移动端显示并居中 */}
             <div className="lg:hidden flex justify-center items-center">
-              <a
+              <Link
                 href="/"
                 className="flex items-center hover:opacity-80 transition-opacity duration-200"
               >
                 <p className="text-xl font-bold gradient-text">
                   {siteConfig.name}
                 </p>
-              </a>
+              </Link>
             </div>
 
             {/* 中间: 导航菜单 (桌面端) */}

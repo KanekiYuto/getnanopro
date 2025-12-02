@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { signIn } from '@/lib/auth-client';
 import { useCachedSession } from '@/hooks/useCachedSession';
 
@@ -180,13 +181,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <div className="mt-6 text-center">
             <p className="text-xs text-text-muted">
               {t('modal.terms')}
-              <a href="/terms" className="text-primary hover:underline ml-1">
+              <Link href="/terms" className="text-primary hover:underline ml-1">
                 {t('modal.termsOfService')}
-              </a>
+              </Link>
               {t('modal.and')}
-              <a href="/privacy" className="text-primary hover:underline ml-1">
+              <Link href="/privacy" className="text-primary hover:underline ml-1">
                 {t('modal.privacyPolicy')}
-              </a>
+              </Link>
             </p>
           </div>
         </div>

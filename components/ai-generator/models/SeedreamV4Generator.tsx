@@ -261,6 +261,7 @@ export default function SeedreamV4Generator({ modelSelector }: SeedreamV4Generat
               >
                 {/* 图片容器 */}
                 <div className="relative w-full h-full rounded-lg overflow-hidden border border-border group-hover:border-foreground/50 transition-colors">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={img}
                     alt={`Generated ${index + 1}`}

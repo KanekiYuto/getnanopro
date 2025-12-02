@@ -62,6 +62,7 @@ export default function MediaGallery({
               {/* 左侧：图片区域 */}
               <div className="relative bg-muted flex items-center justify-center">
                 {item.type === 'image' && (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={item.url}
                     alt={taskInfo.prompt}
