@@ -150,6 +150,8 @@ export const mediaGenerationTask = pgTable('media_generation_task', {
   id: uuid('id').primaryKey().defaultRandom(),
   // 任务ID (UUID格式,用于前端查询和 webhook 回调)
   taskId: uuid('task_id').notNull().unique(),
+  // 分享ID (短ID,用于分享链接)
+  shareId: text('share_id').notNull().unique(),
   // 用户ID
   userId: text('user_id')
     .notNull()
@@ -210,6 +212,8 @@ export const quotaTransaction = pgTable('quota_transaction', {
   balanceBefore: integer('balance_before').notNull(),
   // 交易后余额
   balanceAfter: integer('balance_after').notNull(),
+  // 关联的交易ID (用于退款时关联原始消费交易)
+  relatedTransactionId: uuid('related_transaction_id'),
   // 备注说明
   note: text('note'),
   // 创建时间

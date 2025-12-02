@@ -1,5 +1,7 @@
 'use client';
 
+import ShareToX from '@/components/ui/share-to-x';
+
 export interface MediaItem {
   id: string;
   url: string;
@@ -7,6 +9,7 @@ export interface MediaItem {
 }
 
 export interface TaskInfo {
+  task_id?: string;
   prompt: string;
   created_at: string;
   completed_at: string;
@@ -103,21 +106,37 @@ export default function MediaGallery({
                     </div>
                   </div>
 
-                  {/* 下载按钮 */}
-                  <button
-                    onClick={() => handleDownload(item)}
-                    className="px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary hover:text-white text-primary transition-all flex items-center gap-1.5 text-sm font-medium cursor-pointer"
-                  >
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                      />
-                    </svg>
-                    下载
-                  </button>
+                  {/* 操作按钮组 */}
+                  <div className="flex items-center gap-2">
+                    {/* 分享到 X 按钮 */}
+                    <ShareToX
+                      text={`使用 AI 生成的图片 🎨\n\n提示词: ${taskInfo.prompt}\n\n#AIArt #AI绘画`}
+                      url={
+                        taskInfo.task_id && typeof window !== 'undefined'
+                          ? `${window.location.origin}/v/${taskInfo.task_id}`
+                          : typeof window !== 'undefined'
+                            ? window.location.href
+                            : ''
+                      }
+                      className="px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary hover:text-white text-primary transition-all flex items-center gap-1.5 text-sm font-medium cursor-pointer"
+                    />
+
+                    {/* 下载按钮 */}
+                    <button
+                      onClick={() => handleDownload(item)}
+                      className="px-3 py-1.5 rounded-lg bg-primary/10 hover:bg-primary hover:text-white text-primary transition-all flex items-center gap-1.5 text-sm font-medium cursor-pointer"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                        />
+                      </svg>
+                      下载
+                    </button>
+                  </div>
                 </div>
 
                 {/* 提示词 */}

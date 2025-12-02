@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { mediaGenerationTask, quota, quotaTransaction } from '@/lib/db/schema';
+import { mediaGenerationTask } from '@/lib/db/schema';
 import { randomUUID } from 'crypto';
 import { auth } from '@/lib/auth';
-import { eq, and, gt, or, isNull } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { generateShareId } from '@/lib/utils/generate-share-id';
+import { getRequiredCredits } from '@/config/ai-generator';
+import { getAvailableQuota, consumeQuota } from '@/lib/quota';
 
 // Wavespeed API 配置
 const WAVESPEED_API_URL = 'https://api.wavespeed.ai/api/v3/google/nano-banana-pro/text-to-image';
@@ -15,7 +18,7 @@ interface TextToImageRequest {
   prompt: string;
   aspect_ratio?: string;
   output_format?: 'png' | 'jpeg' | 'webp';
-  resolution?: '2k' | '4k';
+  resolution?: '1k' | '2k' | '4k';
   seed?: string;
 }
 
@@ -52,7 +55,7 @@ export async function POST(request: NextRequest) {
       prompt,
       aspect_ratio = '1:1',
       output_format = 'png',
-      resolution = '2k',
+      resolution = '1k',
       seed,
     } = body;
 
@@ -86,88 +89,27 @@ export async function POST(request: NextRequest) {
 
     const userId = session.user.id;
 
-    // 计算需要消耗的配额 (根据分辨率和模型)
-    const creditsRequired = resolution === '4k' ? 20 : 10;
+    // 计算需要消耗的配额
+    const creditsRequired = getRequiredCredits('text-to-image', 'nano-banana-pro', {
+      resolution,
+      aspect_ratio,
+      seed,
+    });
 
-    // 查找可用的配额记录
-    const availableQuotas = await db
-      .select()
-      .from(quota)
-      .where(
-        and(
-          eq(quota.userId, userId),
-          gt(quota.amount, quota.consumed),
-          or(isNull(quota.expiresAt), gt(quota.expiresAt, new Date()))
-        )
-      )
-      .orderBy(quota.issuedAt);
+    // 检查可用配额
+    const availableCredits = await getAvailableQuota(userId);
 
-    // 计算总可用配额
-    const totalAvailable = availableQuotas.reduce(
-      (sum, q) => sum + (q.amount - q.consumed),
-      0
-    );
-
-    if (totalAvailable < creditsRequired) {
+    if (availableCredits < creditsRequired) {
       return NextResponse.json(
         {
           success: false,
           error: 'Insufficient credits',
           required: creditsRequired,
-          available: totalAvailable,
+          available: availableCredits,
         },
         { status: 400 }
       );
     }
-
-    // 扣除配额并创建交易记录
-    let remainingToConsume = creditsRequired;
-    let selectedQuotaId: string | null = null;
-    let balanceBefore = 0;
-    let balanceAfter = 0;
-
-    for (const quotaRecord of availableQuotas) {
-      if (remainingToConsume <= 0) break;
-
-      const available = quotaRecord.amount - quotaRecord.consumed;
-      const toConsume = Math.min(available, remainingToConsume);
-
-      if (!selectedQuotaId) {
-        selectedQuotaId = quotaRecord.id;
-        balanceBefore = available;
-      }
-
-      // 更新配额消耗
-      await db
-        .update(quota)
-        .set({
-          consumed: quotaRecord.consumed + toConsume,
-          updatedAt: new Date(),
-        })
-        .where(eq(quota.id, quotaRecord.id));
-
-      remainingToConsume -= toConsume;
-
-      if (quotaRecord.id === selectedQuotaId) {
-        balanceAfter = balanceBefore - toConsume;
-      }
-    }
-
-    // 创建配额交易记录
-    const [transaction] = await db
-      .insert(quotaTransaction)
-      .values({
-        userId,
-        quotaId: selectedQuotaId!,
-        type: 'consume',
-        amount: -creditsRequired,
-        balanceBefore,
-        balanceAfter,
-        note: `Text-to-image generation: ${prompt.substring(0, 50)}...`,
-      })
-      .returning();
-
-    const consumeTransactionId = transaction.id;
 
     // 1. 先生成 taskId
     const taskId = randomUUID();
@@ -218,14 +160,36 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 6. API 调用成功后创建任务记录
+    // 6. 先消费配额
+    const consumeResult = await consumeQuota(
+      userId,
+      creditsRequired,
+      `Text-to-image generation: ${prompt.substring(0, 50)}...`
+    );
+
+    if (!consumeResult.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: consumeResult.error || 'Failed to consume quota',
+        },
+        { status: 500 }
+      );
+    }
+
+    // 7. 生成 shareId 并创建任务记录
+    const taskType = 'text-to-image';
+    const model = 'nano-banana-pro';
+    const shareId = generateShareId(taskType, model);
+
     await db.insert(mediaGenerationTask).values({
       taskId,
+      shareId,
       userId,
-      taskType: 'text-to-image',
+      taskType,
       provider: 'wavespeed',
       providerRequestId: data.request_id,
-      model: 'nano-banana-pro',
+      model,
       status: 'pending',
       progress: 0,
       parameters: {
@@ -235,15 +199,16 @@ export async function POST(request: NextRequest) {
         resolution,
         seed,
       },
-      consumeTransactionId,
+      consumeTransactionId: consumeResult.transactionId!,
       startedAt: new Date(),
     });
 
-    // 返回任务ID，前端可以通过轮询获取进度
+    // 返回任务ID和分享ID，前端可以通过轮询获取进度
     return NextResponse.json({
       success: true,
       data: {
         task_id: taskId,
+        share_id: shareId,
         status: 'pending',
       },
     });

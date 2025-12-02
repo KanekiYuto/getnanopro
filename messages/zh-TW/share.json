@@ -1,0 +1,13 @@
+{
+  "notFound": {
+    "title": "內容不存在",
+    "description": "該分享內容可能已被創作者刪除、設為私密、連結已過期，或者您訪問的地址有誤",
+    "createButton": "創建 AI 作品",
+    "homeButton": "返回首頁"
+  },
+  "processing": {
+    "title": "生成中...",
+    "description": "AI 正在創作當前的作品，通常需要幾分鐘時間",
+    "tip": "請稍後刷新頁面查看結果"
+  }
+}

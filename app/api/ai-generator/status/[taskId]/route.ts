@@ -59,6 +59,7 @@ export async function GET(
     // 根据任务状态返回不同的信息
     const baseData = {
       task_id: task.taskId,
+      share_id: task.shareId,
       status: task.status,
       progress: task.progress,
       created_at: task.createdAt,

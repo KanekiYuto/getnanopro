@@ -15,19 +15,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'common' });
 
-  // 当前页面的 canonical URL
-  const canonicalPath = locale === defaultLocale ? '/' : `/${locale}`;
-
-  // 动态生成语言路径
-  const languages = {
-    'x-default': '/',
-    ...Object.fromEntries(
-      locales
-        .filter((loc) => loc !== defaultLocale)
-        .map((loc) => [loc, `/${loc}`])
-    )
-  };
-
   return {
     title: t('seo.title', { siteName: siteConfig.name }),
     description: t('seo.description'),
@@ -37,10 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     publisher: siteConfig.publisher,
     robots: siteConfig.robots,
     metadataBase: siteConfig.url ? new URL(siteConfig.url) : undefined,
-    alternates: {
-      canonical: canonicalPath,
-      languages,
-    },
+    // 注意：alternates 应该在各个页面的 generateMetadata 中设置
+    // 这样才能根据具体页面路径生成正确的语言链接
   };
 }
 

@@ -10,6 +10,10 @@ import FormSelect from '../form/FormSelect';
 import SeedInput from '../form/SeedInput';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useRequiredCredits } from '@/hooks/useRequiredCredits';
+
+// 分辨率类型
+type Resolution = '1k' | '2k' | '4k';
 
 interface NanoBananaProGeneratorProps {
   modelSelector: React.ReactNode;
@@ -20,12 +24,20 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
   const [prompt, setPrompt] = useState('');
   const [aspectRatio, setAspectRatio] = useState('1:1');
   const [seed, setSeed] = useState('');
+  const [resolution, setResolution] = useState<Resolution>('1k');
 
   // 生成状态
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [generatedImages, setGeneratedImages] = useState<MediaItem[]>([]);
   const [taskInfo, setTaskInfo] = useState<TaskInfo | undefined>(undefined);
+
+  // 使用自定义 Hook 计算所需配额
+  const requiredCredits = useRequiredCredits('text-to-image', 'nano-banana-pro', {
+    resolution,
+    aspect_ratio: aspectRatio,
+    seed,
+  });
 
   // 宽高比选项
   const aspectRatios = [
@@ -79,6 +91,7 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
         body: JSON.stringify({
           prompt,
           aspect_ratio: aspectRatio,
+          resolution,
           seed: seed || undefined,
         }),
       });
@@ -118,8 +131,9 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
               type: 'image',
             })));
 
-            // 保存任务信息
+            // 保存任务信息（使用 share_id 而不是 task_id）
             setTaskInfo({
+              task_id: statusResult.data.share_id,
               prompt,
               created_at: statusResult.data.created_at,
               completed_at: statusResult.data.completed_at,
@@ -175,6 +189,20 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
         placeholder="选择宽高比"
       />
 
+      {/* 分辨率选择 */}
+      <FormSelect
+        id="resolution"
+        label="分辨率"
+        value={resolution}
+        onChange={(value) => setResolution(value as Resolution)}
+        options={[
+          { value: '1k', label: '1K' },
+          { value: '2k', label: '2K' },
+          { value: '4k', label: '4K' },
+        ]}
+        placeholder="选择分辨率"
+      />
+
       {/* 高级选项 */}
       <AdvancedSettings>
         <SeedInput value={seed} onChange={setSeed} />
@@ -191,7 +219,7 @@ export default function NanoBananaProGenerator({ modelSelector }: NanoBananaProG
         disabled={isLoading}
         className="w-full rounded-xl px-6 py-3 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-base gradient-bg"
       >
-        {isLoading ? `生成中... ${progress}%` : '生成图像'}
+        {isLoading ? `生成中... ${progress}%` : `生成图像 (消耗 ${requiredCredits} 配额)`}
       </button>
       <CreditsCard />
     </div>

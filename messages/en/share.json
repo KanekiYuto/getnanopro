@@ -1,0 +1,13 @@
+{
+  "notFound": {
+    "title": "Content Not Found",
+    "description": "This shared content may have been deleted by the creator, set to private, the link may have expired, or you may have accessed the wrong address",
+    "createButton": "Create AI Artwork",
+    "homeButton": "Back to Home"
+  },
+  "processing": {
+    "title": "Generating...",
+    "description": "AI is creating the current artwork, this usually takes a few minutes",
+    "tip": "Please refresh the page later to view the result"
+  }
+}

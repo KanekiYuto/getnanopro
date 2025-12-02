@@ -2,14 +2,207 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { mediaGenerationTask } from '@/lib/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { refundQuota } from '@/lib/quota';
 
-// Webhook 请求接口 (Wavespeed 格式)
-interface WebhookPayload {
+// 通用任务状态
+type TaskStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+// Wavespeed Webhook 格式
+interface WavespeedWebhook {
   id: string;
   status: 'pending' | 'processing' | 'completed' | 'failed';
   outputs?: string[];
   error?: string;
   executionTime?: number;
+}
+
+// FAL Webhook 格式（示例）
+interface FalWebhook {
+  request_id: string;
+  status: 'IN_QUEUE' | 'IN_PROGRESS' | 'COMPLETED' | 'FAILED';
+  images?: Array<{ url: string }>;
+  error?: {
+    message: string;
+    code: string;
+  };
+}
+
+// 统一的处理结果
+interface ProcessedWebhook {
+  status: TaskStatus;
+  outputs?: string[];
+  error?: string;
+}
+
+/**
+ * 映射 Wavespeed 状态到统一状态
+ */
+function mapWavespeedStatus(status: WavespeedWebhook['status']): TaskStatus {
+  const statusMap: Record<WavespeedWebhook['status'], TaskStatus> = {
+    'pending': 'pending',
+    'processing': 'processing',
+    'completed': 'completed',
+    'failed': 'failed',
+  };
+  return statusMap[status] || 'pending';
+}
+
+/**
+ * 映射 FAL 状态到统一状态
+ */
+function mapFalStatus(status: FalWebhook['status']): TaskStatus {
+  const statusMap: Record<FalWebhook['status'], TaskStatus> = {
+    'IN_QUEUE': 'pending',
+    'IN_PROGRESS': 'processing',
+    'COMPLETED': 'completed',
+    'FAILED': 'failed',
+  };
+  return statusMap[status] || 'pending';
+}
+
+/**
+ * 处理 Wavespeed webhook 数据
+ */
+function processWavespeedWebhook(payload: WavespeedWebhook): ProcessedWebhook {
+  return {
+    status: mapWavespeedStatus(payload.status),
+    outputs: payload.outputs,
+    error: payload.error,
+  };
+}
+
+/**
+ * 处理 FAL webhook 数据
+ */
+function processFalWebhook(payload: FalWebhook): ProcessedWebhook {
+  return {
+    status: mapFalStatus(payload.status),
+    outputs: payload.images?.map(img => img.url),
+    error: payload.error?.message,
+  };
+}
+
+/**
+ * 根据 provider 处理 webhook 数据
+ */
+function processWebhookByProvider(provider: string, payload: any): ProcessedWebhook {
+  switch (provider.toLowerCase()) {
+    case 'wavespeed':
+      return processWavespeedWebhook(payload as WavespeedWebhook);
+
+    case 'fal':
+      return processFalWebhook(payload as FalWebhook);
+
+    default:
+      // 默认按 Wavespeed 格式处理
+      return processWavespeedWebhook(payload as WavespeedWebhook);
+  }
+}
+
+/**
+ * 处理任务完成
+ */
+async function handleTaskCompleted(taskId: string, outputs: string[]) {
+  const results = outputs.map((url) => ({
+    url,
+    type: 'image',
+  }));
+
+  await db
+    .update(mediaGenerationTask)
+    .set({
+      status: 'completed',
+      progress: 100,
+      results,
+      completedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(mediaGenerationTask.taskId, taskId));
+
+  console.log(`Task completed: ${taskId}`, results);
+}
+
+/**
+ * 处理任务失败并退款
+ */
+async function handleTaskFailed(taskId: string, consumeTransactionId: string | null, error?: string) {
+  const errorMessage = error || 'Unknown error';
+
+  // 如果有消费交易，执行退款
+  if (consumeTransactionId) {
+    const refundResult = await refundQuota(
+      consumeTransactionId,
+      `Task failed: ${errorMessage}`
+    );
+
+    if (refundResult.success) {
+      console.log(`Refund successful for task ${taskId}:`, refundResult.transactionId);
+
+      // 更新任务状态并关联退款交易ID
+      await db
+        .update(mediaGenerationTask)
+        .set({
+          status: 'failed',
+          errorMessage: {
+            message: errorMessage,
+            code: 'generation_failed',
+          },
+          refundTransactionId: refundResult.transactionId,
+          completedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(mediaGenerationTask.taskId, taskId));
+    } else {
+      console.error(`Refund failed for task ${taskId}:`, refundResult.error);
+
+      // 即使退款失败，也要更新任务状态
+      await db
+        .update(mediaGenerationTask)
+        .set({
+          status: 'failed',
+          errorMessage: {
+            message: errorMessage,
+            code: 'generation_failed',
+            refundError: refundResult.error,
+          },
+          completedAt: new Date(),
+          updatedAt: new Date(),
+        })
+        .where(eq(mediaGenerationTask.taskId, taskId));
+    }
+  } else {
+    // 没有消费交易ID，直接标记失败
+    await db
+      .update(mediaGenerationTask)
+      .set({
+        status: 'failed',
+        errorMessage: {
+          message: errorMessage,
+          code: 'generation_failed',
+        },
+        completedAt: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(eq(mediaGenerationTask.taskId, taskId));
+  }
+
+  console.error(`Task failed: ${taskId}`, errorMessage);
+}
+
+/**
+ * 处理任务进行中
+ */
+async function handleTaskProcessing(taskId: string) {
+  await db
+    .update(mediaGenerationTask)
+    .set({
+      status: 'processing',
+      progress: 50,
+      updatedAt: new Date(),
+    })
+    .where(eq(mediaGenerationTask.taskId, taskId));
+
+  console.log(`Task processing: ${taskId}`);
 }
 
 /**
@@ -23,13 +216,15 @@ export async function POST(
   try {
     const { provider, taskId } = await params;
 
-    // 解析 webhook 数据
-    const payload: WebhookPayload = await request.json();
-    const { status, outputs, error } = payload;
+    // 解析原始 webhook 数据
+    const rawPayload = await request.json();
+
+    // 根据 provider 处理数据
+    const { status, outputs, error } = processWebhookByProvider(provider, rawPayload);
 
     console.log(`Webhook received from ${provider}:`, { taskId, status, outputs });
 
-    // 根据 taskId 和 provider 查找任务
+    // 查找任务
     const tasks = await db
       .select()
       .from(mediaGenerationTask)
@@ -57,56 +252,24 @@ export async function POST(
       return NextResponse.json({ success: true, message: 'Task already finished' });
     }
 
-    // 根据状态更新任务
-    if (status === 'completed' && outputs && outputs.length > 0) {
-      // 任务完成，更新结果
-      const results = outputs.map((url) => ({
-        url,
-        type: 'image',
-      }));
+    // 根据状态处理任务
+    switch (status) {
+      case 'completed':
+        if (outputs && outputs.length > 0) {
+          await handleTaskCompleted(taskId, outputs);
+        }
+        break;
 
-      await db
-        .update(mediaGenerationTask)
-        .set({
-          status: 'completed',
-          progress: 100,
-          results,
-          completedAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(eq(mediaGenerationTask.id, task.id));
+      case 'failed':
+        await handleTaskFailed(taskId, task.consumeTransactionId, error);
+        break;
 
-      console.log(`Task completed: ${task.id}`, results);
-    } else if (status === 'failed') {
-      // 任务失败，记录错误
-      await db
-        .update(mediaGenerationTask)
-        .set({
-          status: 'failed',
-          errorMessage: {
-            message: error || 'Unknown error',
-            code: 'generation_failed',
-          },
-          completedAt: new Date(),
-          updatedAt: new Date(),
-        })
-        .where(eq(mediaGenerationTask.id, task.id));
+      case 'processing':
+        await handleTaskProcessing(taskId);
+        break;
 
-      // TODO: 创建退款交易记录
-
-      console.error(`Task failed: ${task.id}`, error);
-    } else if (status === 'processing') {
-      // 任务处理中，更新进度
-      await db
-        .update(mediaGenerationTask)
-        .set({
-          status: 'processing',
-          progress: 50, // Wavespeed 不提供具体进度，使用固定值
-          updatedAt: new Date(),
-        })
-        .where(eq(mediaGenerationTask.id, task.id));
-
-      console.log(`Task processing: ${task.id}`);
+      default:
+        console.warn(`Unknown status: ${status}`);
     }
 
     // 返回成功响应
