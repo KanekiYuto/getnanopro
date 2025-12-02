@@ -20,8 +20,12 @@ export default async function NotFound() {
   const messages = await getMessages({ locale });
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <NotFoundClient />
-    </NextIntlClientProvider>
+    <html lang={locale}>
+      <body>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <NotFoundClient />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

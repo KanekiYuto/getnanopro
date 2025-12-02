@@ -3,17 +3,19 @@ import { Metadata } from 'next';
 import { format } from 'date-fns';
 import { getTranslations } from 'next-intl/server';
 import { getModelDisplayName } from '@/config/model-names';
+import { getSiteUrl } from '@/lib/urls';
 import { fetchTaskData } from './lib/api';
 import { generatePageMetadata } from './lib/metadata';
 import { generateStructuredData } from './lib/utils';
-import { PageProps } from './types';
+import { PageProps } from './types/index';
 import ImageCarousel from './components/ImageCarousel';
 import ActionButtons from './components/ActionButtons';
 import PromptCard from './components/PromptCard';
 import InfoCard from './components/InfoCard';
 import ProcessingPage from './components/ProcessingPage';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://getnanopro.com';
+// 强制动态渲染，确保 notFound() 返回真正的 404 状态码
+export const dynamic = 'force-dynamic';
 
 /**
  * 生成页面 metadata
@@ -22,6 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { locale, taskId: shareId } = await params;
   const task = await fetchTaskData(shareId);
 
+  // 任务不存在
   if (!task) {
     const t = await getTranslations({ locale, namespace: 'share.notFound' });
     return {
@@ -52,7 +55,7 @@ export default async function SharePage({ params }: PageProps) {
   const { taskId: shareId } = await params;
   const task = await fetchTaskData(shareId);
 
-  // 任务不存在
+  // 任务不存在，返回 404
   if (!task) {
     notFound();
   }
@@ -67,7 +70,8 @@ export default async function SharePage({ params }: PageProps) {
   const model = getModelDisplayName(task.model || 'Unknown Model');
   const resolution = task.parameters?.resolution;
   const aspectRatio = task.parameters?.aspect_ratio;
-  const structuredData = generateStructuredData(task, prompt, model, SITE_URL);
+  const siteUrl = getSiteUrl();
+  const structuredData = generateStructuredData(task, prompt, model, siteUrl);
 
   return (
     <>
@@ -120,7 +124,7 @@ export default async function SharePage({ params }: PageProps) {
 
                 {/* 操作按钮 */}
                 <ActionButtons
-                  shareUrl={`${SITE_URL}/v/${task.share_id}`}
+                  shareUrl={`${siteUrl}/v/${task.share_id}`}
                   prompt={prompt}
                 />
               </aside>

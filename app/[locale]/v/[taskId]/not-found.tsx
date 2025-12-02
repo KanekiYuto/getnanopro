@@ -1,8 +1,10 @@
-import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+'use client';
 
-export default async function NotFound() {
-  const t = await getTranslations('share.notFound');
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
+
+export default function NotFound() {
+  const t = useTranslations('share.notFound');
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg px-4">

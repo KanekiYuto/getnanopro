@@ -1,6 +1,13 @@
 'use client';
 
+import { useState } from 'react';
 import { Link } from '@/i18n/routing';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 interface ActionButtonsProps {
   shareUrl: string;
@@ -8,10 +15,15 @@ interface ActionButtonsProps {
 }
 
 export default function ActionButtons({ shareUrl, prompt }: ActionButtonsProps) {
+  const [copied, setCopied] = useState(false);
+
   const handleCopyLink = async () => {
+    if (copied) return;
+
     try {
       await navigator.clipboard.writeText(shareUrl);
-      // 可以添加一个提示，告诉用户复制成功
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy link:', err);
     }
@@ -34,15 +46,35 @@ export default function ActionButtons({ shareUrl, prompt }: ActionButtonsProps) 
     <div className="flex items-center justify-between gap-3">
       <div className="flex items-center gap-1">
         {/* 复制链接按钮 */}
-        <button
-          onClick={handleCopyLink}
-          className="p-1.5 rounded-md hover:bg-zinc-700/50 transition-colors cursor-pointer"
-          aria-label="复制链接"
-        >
-          <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
-          </svg>
-        </button>
+        <TooltipProvider>
+          <Tooltip open={copied}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={handleCopyLink}
+                className="p-1.5 rounded-md hover:bg-zinc-700/50 transition-colors cursor-pointer"
+                aria-label={copied ? '已复制链接' : '复制链接'}
+              >
+                {copied ? (
+                  <svg className="w-4 h-4 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                  </svg>
+                )}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              sideOffset={8}
+              className="bg-zinc-800 text-white border-0"
+              arrowClassName="fill-zinc-800"
+            >
+              <p>已复制链接</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
         {/* 分享按钮 */}
         <button

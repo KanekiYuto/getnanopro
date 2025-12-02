@@ -7,7 +7,7 @@
 
 /* 进度条本身 */
 #nprogress .bar {
-  background: linear-gradient(90deg, rgb(175, 64, 255), rgb(91, 66, 243) 50%, rgb(0, 221, 235));
+  background: linear-gradient(90deg, #FF3466, #C721FF);
   position: fixed;
   z-index: 9999;
   top: 0;
@@ -23,7 +23,7 @@
   right: 0px;
   width: 100px;
   height: 100%;
-  box-shadow: 0 0 15px rgba(0, 221, 235, 0.6), 0 0 8px rgba(91, 66, 243, 0.4);
+  box-shadow: 0 0 15px rgba(199, 33, 255, 0.6), 0 0 8px rgba(255, 52, 102, 0.4);
   opacity: 1;
   transform: rotate(3deg) translate(0px, -4px);
 }
@@ -42,8 +42,8 @@
   height: 18px;
   box-sizing: border-box;
   border: solid 2px transparent;
-  border-top-color: rgb(175, 64, 255);
-  border-left-color: rgb(0, 221, 235);
+  border-top-color: #FF3466;
+  border-left-color: #C721FF;
   border-radius: 50%;
   animation: nprogress-spinner 400ms linear infinite;
 }

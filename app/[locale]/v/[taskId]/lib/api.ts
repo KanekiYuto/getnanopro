@@ -1,23 +1,48 @@
 import { TaskData } from '../types';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://getnanopro.com';
-const APP_URL = process.env.NEXT_PUBLIC_WEBHOOK_URL || SITE_URL;
+import { db } from '@/lib/db';
+import { mediaGenerationTask } from '@/lib/db/schema';
+import { eq } from 'drizzle-orm';
 
 /**
- * 通过 API 获取任务信息
+ * 通过数据库直接查询任务信息
  */
 export async function fetchTaskData(shareId: string): Promise<TaskData | null> {
   try {
-    const response = await fetch(`${APP_URL}/api/ai-generator/share/${shareId}`, {
-      cache: 'no-store',
-    });
+    const tasks = await db
+      .select({
+        shareId: mediaGenerationTask.shareId,
+        status: mediaGenerationTask.status,
+        progress: mediaGenerationTask.progress,
+        parameters: mediaGenerationTask.parameters,
+        results: mediaGenerationTask.results,
+        createdAt: mediaGenerationTask.createdAt,
+        completedAt: mediaGenerationTask.completedAt,
+        model: mediaGenerationTask.model,
+        taskType: mediaGenerationTask.taskType,
+        errorMessage: mediaGenerationTask.errorMessage,
+      })
+      .from(mediaGenerationTask)
+      .where(eq(mediaGenerationTask.shareId, shareId))
+      .limit(1);
 
-    if (!response.ok) {
+    if (tasks.length === 0) {
       return null;
     }
 
-    const data = await response.json();
-    return data.success ? data.data : null;
+    const task = tasks[0];
+
+    return {
+      share_id: task.shareId,
+      status: task.status,
+      progress: task.progress,
+      model: task.model,
+      task_type: task.taskType,
+      parameters: task.parameters as TaskData['parameters'],
+      results: task.results as TaskData['results'],
+      created_at: task.createdAt.toISOString(),
+      completed_at: task.completedAt?.toISOString(),
+      error: task.errorMessage,
+    };
   } catch (error) {
     console.error('Failed to fetch task data:', error);
     return null;
