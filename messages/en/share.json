@@ -17,7 +17,8 @@
     "shareTitle": "Share to",
     "shareToX": "Share to X",
     "moreActions": "More Actions",
-    "download": "Download Image",
+    "downloadCurrent": "Download Current Image",
+    "downloadAll": "Download All Images",
     "createSimilar": "Create Similar Image"
   },
   "details": {

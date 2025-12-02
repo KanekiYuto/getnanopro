@@ -128,6 +128,7 @@ export default async function SharePage({ params }: PageProps) {
                   shareUrl={`${siteUrl}/v/${task.share_id}`}
                   prompt={prompt}
                   imageUrl={task.results?.[0]?.url}
+                  allImages={task.results?.map(img => img.url)}
                 />
               </aside>
             </div>

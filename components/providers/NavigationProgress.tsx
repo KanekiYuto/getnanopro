@@ -36,6 +36,11 @@ export default function NavigationProgress() {
       const link = target.closest('a');
 
       if (link && link.href) {
+        // 忽略下载链接
+        if (link.hasAttribute('data-download-link')) {
+          return;
+        }
+
         const url = new URL(link.href);
         // 只在站内导航时显示进度条
         if (url.origin === window.location.origin) {

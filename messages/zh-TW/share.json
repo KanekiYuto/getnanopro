@@ -17,7 +17,8 @@
     "shareTitle": "分享到",
     "shareToX": "分享到 X",
     "moreActions": "更多操作",
-    "download": "下載圖片",
+    "downloadCurrent": "下載當前圖片",
+    "downloadAll": "下載全部圖片",
     "createSimilar": "創建相似圖片"
   },
   "details": {
