@@ -27,25 +27,8 @@ export default function QuotaPage() {
   const [expiredQuotas, setExpiredQuotas] = useState<QuotaItem[] | null>(null);
   const [activeTab, setActiveTab] = useState<'active' | 'expired'>('active');
 
-  // 获取总配额（仅在已登录时）
-  useEffect(() => {
-    if (user) {
-      fetchTotalQuota();
-    }
-  }, [user]);
-
-  // 根据当前标签页加载对应数据（仅在已登录时）
-  useEffect(() => {
-    if (!user) return;
-
-    if (activeTab === 'active' && activeQuotas === null) {
-      fetchActiveQuotas();
-    } else if (activeTab === 'expired' && expiredQuotas === null) {
-      fetchExpiredQuotas();
-    }
-  }, [activeTab, activeQuotas, expiredQuotas, user]);
-
-  const fetchTotalQuota = async () => {
+  // 使用 useCallback 定义获取函数，避免函数声明顺序问题
+  const fetchTotalQuota = useCallback(async () => {
     try {
       const response = await fetch('/api/quota/total');
       const result = await response.json();
@@ -56,9 +39,9 @@ export default function QuotaPage() {
     } catch (error) {
       console.error('Failed to fetch total quota:', error);
     }
-  };
+  }, []);
 
-  const fetchActiveQuotas = async () => {
+  const fetchActiveQuotas = useCallback(async () => {
     try {
       const response = await fetch('/api/quota/list?type=active');
       const result = await response.json();
@@ -70,9 +53,9 @@ export default function QuotaPage() {
       console.error('Failed to fetch active quotas:', error);
       setActiveQuotas([]);
     }
-  };
+  }, []);
 
-  const fetchExpiredQuotas = async () => {
+  const fetchExpiredQuotas = useCallback(async () => {
     try {
       const response = await fetch('/api/quota/list?type=expired');
       const result = await response.json();
@@ -84,7 +67,25 @@ export default function QuotaPage() {
       console.error('Failed to fetch expired quotas:', error);
       setExpiredQuotas([]);
     }
-  };
+  }, []);
+
+  // 获取总配额（仅在已登录时）
+  useEffect(() => {
+    if (user) {
+      fetchTotalQuota();
+    }
+  }, [user, fetchTotalQuota]);
+
+  // 根据当前标签页加载对应数据（仅在已登录时）
+  useEffect(() => {
+    if (!user) return;
+
+    if (activeTab === 'active' && activeQuotas === null) {
+      fetchActiveQuotas();
+    } else if (activeTab === 'expired' && expiredQuotas === null) {
+      fetchExpiredQuotas();
+    }
+  }, [activeTab, activeQuotas, expiredQuotas, user, fetchActiveQuotas, fetchExpiredQuotas]);
 
   // 未登录状态
   if (!user) {
