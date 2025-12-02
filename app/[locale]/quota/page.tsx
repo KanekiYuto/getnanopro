@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import useUserStore from '@/store/useUserStore';
 import LoginRequired from '@/components/common/LoginRequired';
