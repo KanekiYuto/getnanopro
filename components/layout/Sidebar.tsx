@@ -273,8 +273,13 @@ export default function Sidebar() {
           <div className="fixed inset-y-0 left-0 flex w-full max-w-xs flex-col bg-bg-elevated border-r border-border shadow-2xl animate-in slide-in-from-left duration-300 z-10">
             {/* 头部 */}
             <div className="relative flex h-[60px] items-center justify-center border-b border-border">
-              <Link href="/" className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity">
-                {siteConfig.name}
+              <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt={siteConfig.name}
+                  className="h-8 w-auto"
+                />
               </Link>
               <button
                 type="button"
@@ -330,9 +335,14 @@ export default function Sidebar() {
         <div className="flex h-[60px] shrink-0 items-center justify-center border-b border-border">
           <Link
             href="/"
-            className="text-2xl font-bold gradient-text hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            {siteConfig.name}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt={siteConfig.name}
+              className="h-8 w-auto"
+            />
           </Link>
         </div>
 

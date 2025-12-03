@@ -1,8 +1,9 @@
 import { MetadataRoute } from 'next';
 import { locales } from '@/i18n/config';
+import { getSiteUrl } from '@/lib/urls';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://getnanopro.com';
+  const baseUrl = getSiteUrl()
 
   // 需要索引的页面路径
   const routes = [

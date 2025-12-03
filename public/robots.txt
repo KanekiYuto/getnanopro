@@ -13,4 +13,4 @@ Disallow: /*.json$
 Disallow: /*.xml$
 
 # Sitemap 位置
-Sitemap: https://getnanopro.com/sitemap.xml
+Sitemap: https://fluxreve.com/sitemap.xml

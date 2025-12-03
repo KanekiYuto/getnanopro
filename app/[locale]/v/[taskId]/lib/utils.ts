@@ -1,4 +1,5 @@
 import { TaskData } from '../types';
+import { siteConfig } from '@/config/site';
 
 /**
  * 生成 Schema.org 结构化数据
@@ -11,7 +12,7 @@ export function generateStructuredData(task: TaskData, prompt: string, model: st
     description: `AI generated images using ${model}`,
     author: {
       '@type': 'Organization',
-      name: 'GetNanoPro',
+      name: siteConfig.name,
       url: siteUrl,
     },
     dateCreated: task.created_at,

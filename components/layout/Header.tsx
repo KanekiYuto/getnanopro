@@ -40,9 +40,12 @@ export default function Header() {
                 href="/"
                 className="flex items-center hover:opacity-80 transition-opacity duration-200"
               >
-                <p className="text-xl font-bold gradient-text">
-                  {siteConfig.name}
-                </p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt={siteConfig.name}
+                  className="h-7 w-auto"
+                />
               </Link>
             </div>
 
